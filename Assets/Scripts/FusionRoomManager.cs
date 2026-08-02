@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using Fusion;
 using Fusion.Sockets;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
@@ -118,6 +119,17 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
         await _runner.LoadScene(SceneRef.FromIndex((int)SceneIndex.InGame));
     }
+
+    public async void LeaveRoom()
+    {
+        if (_runner == null || !_runner.IsRunning)
+        {
+            DebugLogger.LogError("Fusionに接続されていません");
+            return;
+        }
+
+        await _runner.Shutdown();
+    }
     
     void CreateRunner()
     {
@@ -136,22 +148,22 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        throw new NotImplementedException();
+        DebugLogger.Log($"プレイヤーが参加しました : {player}\n現在のプレイヤー数 : {runner.ActivePlayers.Count()}");
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        throw new NotImplementedException();
+        DebugLogger.Log($"プレイヤーが退出しました : {player}\n現在のプレイヤー数 : {runner.ActivePlayers.Count()}");
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        throw new NotImplementedException();
+        DebugLogger.Log($"Fusionから切断されました : {shutdownReason}");
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        throw new NotImplementedException();
+        DebugLogger.Log($"ルームリストが更新されました : {sessionList.Count}件のルームが見つかりました");
     }
 
 #region Fusionのコールバックたち
