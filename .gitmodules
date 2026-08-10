@@ -1,0 +1,3 @@
+[submodule "Assets/SubModule"]
+	path = Assets/SubModule
+	url = https://github.com/YajimaKanato/MultiPlay2DSub.git
