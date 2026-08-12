@@ -34,7 +34,7 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (string.IsNullOrEmpty(roomName))
         {
-            DebugLogger.LogError("部屋の名前を指定してください");
+            GameDebug.LogError("部屋の名前を指定してください");
             return;
         }
 
@@ -54,11 +54,11 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (!result.Ok)
         {
-            DebugLogger.LogError($"ルームの作成に失敗しました: {result.ShutdownReason}");
+            GameDebug.LogError($"ルームの作成に失敗しました: {result.ShutdownReason}");
             return;
         }
 
-        DebugLogger.Log($"ルームを作成しました: {roomName}");
+        GameDebug.Log($"ルームを作成しました: {roomName}");
         await _runner.LoadScene(SceneRef.FromIndex((int)SceneIndex.Lobby));
     }
 
@@ -70,18 +70,18 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (!result.Ok)
         {
-            DebugLogger.LogError($"ルームの検索に失敗しました: {result.ShutdownReason}");
+            GameDebug.LogError($"ルームの検索に失敗しました: {result.ShutdownReason}");
             return;
         }
 
-        DebugLogger.Log("ルームの検索に成功しました");
+        GameDebug.Log("ルームの検索に成功しました");
     }
 
     public async void JoinRoom(string roomName)
     {
         if (string.IsNullOrEmpty(roomName))
         {
-            DebugLogger.LogError("部屋の名前を指定してください");
+            GameDebug.LogError("部屋の名前を指定してください");
             return;
         }
 
@@ -96,24 +96,24 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (!result.Ok)
         {
-            DebugLogger.LogError($"ルームへの参加に失敗しました: {result.ShutdownReason}");
+            GameDebug.LogError($"ルームへの参加に失敗しました: {result.ShutdownReason}");
             return;
         }
 
-        DebugLogger.Log($"ルームに参加しました: {roomName}");
+        GameDebug.Log($"ルームに参加しました: {roomName}");
     }
 
     public async void StartGame()
     {
         if (_runner == null || !_runner.IsRunning)
         {
-            DebugLogger.LogError("Fusionに接続されていません");
+            GameDebug.LogError("Fusionに接続されていません");
             return;
         }
 
         if (!_runner.IsServer)
         {
-            DebugLogger.LogError("ゲームを開始できるのはホストのみです");
+            GameDebug.LogError("ゲームを開始できるのはホストのみです");
             return;
         }
 
@@ -124,7 +124,7 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (_runner == null || !_runner.IsRunning)
         {
-            DebugLogger.LogError("Fusionに接続されていません");
+            GameDebug.LogError("Fusionに接続されていません");
             return;
         }
 
@@ -148,22 +148,22 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        DebugLogger.Log($"プレイヤーが参加しました : {player}\n現在のプレイヤー数 : {runner.ActivePlayers.Count()}");
+        GameDebug.Log($"プレイヤーが参加しました : {player}\n現在のプレイヤー数 : {runner.ActivePlayers.Count()}");
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        DebugLogger.Log($"プレイヤーが退出しました : {player}\n現在のプレイヤー数 : {runner.ActivePlayers.Count()}");
+        GameDebug.Log($"プレイヤーが退出しました : {player}\n現在のプレイヤー数 : {runner.ActivePlayers.Count()}");
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        DebugLogger.Log($"Fusionから切断されました : {shutdownReason}");
+        GameDebug.Log($"Fusionから切断されました : {shutdownReason}");
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        DebugLogger.Log($"ルームリストが更新されました : {sessionList.Count}件のルームが見つかりました");
+        GameDebug.Log($"ルームリストが更新されました : {sessionList.Count}件のルームが見つかりました");
     }
 
 #region Fusionのコールバックたち
