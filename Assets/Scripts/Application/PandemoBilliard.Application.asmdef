@@ -1,0 +1,16 @@
+{
+  "name": "PandemoBilliard.Application",
+  "rootNamespace": "PandemoBilliard.Application",
+  "references": [
+    "PandemoBilliard.Domain"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": true
+}

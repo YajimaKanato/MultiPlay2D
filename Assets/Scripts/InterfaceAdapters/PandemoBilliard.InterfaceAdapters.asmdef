@@ -1,0 +1,17 @@
+{
+  "name": "PandemoBilliard.InterfaceAdapters",
+  "rootNamespace": "PandemoBilliard.InterfaceAdapters",
+  "references": [
+    "PandemoBilliard.Domain",
+    "PandemoBilliard.Application"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": true
+}
