@@ -17,6 +17,9 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
     static FusionRoomManager _instance;
     public static FusionRoomManager Instance => _instance;
 
+    List<SessionInfo> _allRooms;
+    public List<SessionInfo> AllRooms => _allRooms;
+
     private void Awake()
     {
         if (_instance == null || _instance == this)
@@ -49,7 +52,11 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,
             PlayerCount = _maxPlayerCount,
-            SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
+            SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>(),
+            SessionProperties = new Dictionary<string, SessionProperty>
+            {
+                {"PassKey", ""}
+            }
         });
 
         if (!result.Ok)
@@ -163,6 +170,7 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        _allRooms = sessionList.Where(info => string.IsNullOrWhiteSpace((string)info.Properties["PassKey"])).ToList();
         GameDebug.Log($"ルームリストが更新されました : {sessionList.Count}件のルームが見つかりました");
     }
 

@@ -34,6 +34,9 @@ public class FusionRoomController : MonoBehaviour
         _joinRoomEvent?.Invoke(_roomCodeField.text);
     }
 
+    /// <summary>
+    /// 部屋検索時の処理
+    /// </summary>
     public void SearchRoom()
     {
         _searchRoomEvent?.Invoke();
