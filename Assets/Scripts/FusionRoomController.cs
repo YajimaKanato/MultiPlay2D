@@ -15,6 +15,8 @@ public class FusionRoomController : MonoBehaviour
     private StartRoomEvent _createRoomEvent;
     [SerializeField]
     private StartRoomEvent _joinRoomEvent;
+    [SerializeField]
+    private UnityEvent _searchRoomEvent;
 
     /// <summary>
     /// 部屋立て時の処理
@@ -30,6 +32,11 @@ public class FusionRoomController : MonoBehaviour
     public void JoinRoom()
     {
         _joinRoomEvent?.Invoke(_roomCodeField.text);
+    }
+
+    public void SearchRoom()
+    {
+        _searchRoomEvent?.Invoke();
     }
 
     /// <summary>
