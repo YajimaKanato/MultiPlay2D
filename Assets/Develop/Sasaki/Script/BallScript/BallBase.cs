@@ -8,10 +8,9 @@ public abstract class BallBase : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rb;
 
-    [SerializeField] private float _ballRadius;　　
-    [SerializeField] private float _friction = 0.99f;　//転がる時の球の摩擦力
-
-    private Vector3 _velocity;
+    [SerializeField] private float _ballRadius;
+    [Tooltip("転がる時の球の摩擦力")]
+    [SerializeField] private float _friction = 0.99f;
 
     protected virtual void Awake()
     {
@@ -43,13 +42,12 @@ public abstract class BallBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動方向と速度を更新する処理 (ショットで使用　＋　加速装置で使用)
+    /// 速度ベクトルを更新する処理 (ショットで使用　＋　加速装置で使用)   
+    /// 引数は（速度ベクトル）
     /// </summary>
-    protected virtual void UpdateMoveVelocity(Vector3 direction, float addForce = 1)
+    public void UpdateMoveVelocity(Vector3 velocity)
     {
-        _velocity = direction * addForce;
-
-        _rb.linearVelocity = _velocity;
+        _rb.linearVelocity = velocity;
     }
 
     /// <summary>
@@ -57,9 +55,7 @@ public abstract class BallBase : MonoBehaviour
     /// </summary>
     /// <param name="direction"></param>
     private void UpdateRotate(Vector3 direction)
-    {
-        UpdateBallRadius();
-
+    {     
         // 進行方向に応じた回転軸を求める式
         Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
 
@@ -71,15 +67,10 @@ public abstract class BallBase : MonoBehaviour
     }
 
     /// <summary>
-    ///ボールの半径を計算し、必要に応じてボールの半径を更新する処理
+    ///ボールの半径を更新する処理 
     /// </summary>
-    private void UpdateBallRadius()
+    public void UpdateBallRadius()
     {
-        float radius = transform.localScale.x;
-
-        if (_ballRadius != radius || _ballRadius == 0)
-        {
-            _ballRadius = radius;
-        }
+        _ballRadius = transform.localScale.x;
     }
 }

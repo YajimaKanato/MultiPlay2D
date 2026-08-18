@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 的球の(NumberBall)入力操作と物理挙動を管理するクラス。
+/// </summary>
 public class NumberBallsController : BallBase
 {
     protected override void Awake()
@@ -15,15 +18,5 @@ public class NumberBallsController : BallBase
     protected override void BaseFixedUpdate()
     {
         base.BaseFixedUpdate();
-    }
-
-    /// <summary>
-    /// 手球の移動方向と速度の値を代入　＋　基底クラスで手球の移動を更新する処理
-    /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="addForce"></param>
-    public void SetNumberBallVelocity(Vector3 direction, float addForce = 1)
-    {
-        base.UpdateMoveVelocity(direction, addForce);
     }
 }
