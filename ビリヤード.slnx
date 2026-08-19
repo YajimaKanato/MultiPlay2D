@@ -1,0 +1,8 @@
+﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Fusion.Unity.csproj" />
+  <Project Path="Photon.Realtime.csproj" />
+  <Project Path="ParrelSync.csproj" />
+  <Project Path="Fusion.Unity.Editor.csproj" />
+  <Project Path="Unity.Fusion.CodeGen.csproj" />
+</Solution>
