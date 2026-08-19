@@ -68,13 +68,13 @@ public abstract class BallBase : MonoBehaviour
     }
 
     /// <summary>
-    ///ボールの直径を更新、半径を求める処理
-    ///引数は(ボールの直径)
+    ///球の大きさを更新する処理
+    ///引数は(ボールの半径)
     /// </summary>
-    public void UpdateBallDiameter(float diameter)
+    public void UpdateBallRadius(float radius)
     {
-        transform.localScale = new Vector3(diameter, diameter, diameter);
+        transform.localScale = new Vector3(radius, radius, radius) * 2;
 
-        _ballRadius = diameter * _radiusFactor; 
+        _ballRadius = radius; 
     }
 }
