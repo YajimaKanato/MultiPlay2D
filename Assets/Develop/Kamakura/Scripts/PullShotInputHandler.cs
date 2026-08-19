@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 /// <summary>
 /// 引っ張り操作を検知し、ショット力を計算してRigidbodyに加えるクラス
 /// </summary>
@@ -40,7 +41,7 @@ public class PullShotInputHandler : MonoBehaviour
 
     private bool _isDragging = false;
     private Vector3 _dragStartPos;
-
+    private int _activePointerId = -1;
     private void Awake()
     {
         if (_camera == null)
@@ -52,33 +53,42 @@ public class PullShotInputHandler : MonoBehaviour
         {
             _targetRigidbody = GetComponent<Rigidbody>();
         }
+
     }
 
     private void Update()
     {
         if (_camera == null) return;
 
+        Pointer currentPointer = Pointer.current;
+        if (currentPointer == null) return;
+
         float targetY = _targetRigidbody != null ? _targetRigidbody.transform.position.y : 0f;
 
+
         // ドラッグ開始
-        if (Input.GetMouseButtonDown(0))
+        if (currentPointer.press.wasPressedThisFrame)
         {
             // UIをタップしている場合は入力を無視する
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(currentPointer.deviceId))
             {
                 return;
             }
-            if (TryGetWorldPosition(Input.mousePosition, targetY, out Vector3 worldPos))
+            if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 worldPos))
             {
                 _isDragging = true;
+                _activePointerId = currentPointer.deviceId;
                 _dragStartPos = worldPos;
-                _onDragStart?.Invoke(_dragStartPos);
+                // ドラッグ開始位置を通知（Rigidbodyがある場合はその位置を優先）
+                Vector3 originPos = _targetRigidbody != null ? _targetRigidbody.position : worldPos;
+                _onDragStart?.Invoke(originPos);
             }
         }
         // ドラッグ中（矢印表示・予測線などの通知）
-        else if (Input.GetMouseButton(0) && _isDragging)
+        else if (currentPointer.press.isPressed && _isDragging)
         {
-            if (TryGetWorldPosition(Input.mousePosition, targetY, out Vector3 currentWorldPos))
+            if (currentPointer.deviceId != _activePointerId) return;
+            if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 currentWorldPos))
             {
                 Vector3 dragVector = currentWorldPos - _dragStartPos;
                 dragVector.y = 0f;
@@ -86,16 +96,20 @@ public class PullShotInputHandler : MonoBehaviour
                 float clampedDistance = Mathf.Clamp(dragVector.magnitude, 0f, _maxDragDistance);
                 float powerRatio = Mathf.Clamp01(clampedDistance / _maxDragDistance);
 
-                _onDragUpdate?.Invoke(_dragStartPos, dragVector, powerRatio);
+                // ドラッグ更新位置を通知（Rigidbodyがある場合はその位置を優先）
+                Vector3 originPos = _targetRigidbody != null ? _targetRigidbody.position : _dragStartPos;
+                _onDragUpdate?.Invoke(originPos, dragVector, powerRatio);
             }
         }
         // ドラッグ終了（ショット発射またはキャンセル）
-        else if (Input.GetMouseButtonUp(0) && _isDragging)
+        else if (currentPointer.press.wasReleasedThisFrame && _isDragging)
         {
+            if (currentPointer.deviceId != _activePointerId) return;
             _isDragging = false;
+            _activePointerId = -1;
             _onDragEnd?.Invoke();
 
-            if (TryGetWorldPosition(Input.mousePosition, targetY, out Vector3 currentWorldPos))
+            if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 currentWorldPos))
             {
                 Vector3 dragVector = currentWorldPos - _dragStartPos;
                 dragVector.y = 0f;
@@ -109,6 +123,16 @@ public class PullShotInputHandler : MonoBehaviour
 
                 ShootBall(dragVector);
             }
+        }
+    }
+    private void OnDisable()
+    {
+        // ドラッグ中に無効化された場合、ドラッグ終了イベントを発火
+        if (_isDragging)
+        {
+            _isDragging = false;
+            _activePointerId = -1;
+            _onDragEnd?.Invoke();
         }
     }
 

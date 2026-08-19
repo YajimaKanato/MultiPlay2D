@@ -82,7 +82,7 @@ public class PullArrowVisualizer : MonoBehaviour
         startPos.y += _yOffset;
         _arrowRenderer.transform.position = startPos;
         _arrowRenderer.transform.localScale = Vector3.zero;
-        _arrowRenderer.gameObject.SetActive(true);
+        _arrowRenderer.enabled = true;
     }
 
     /// <summary>
@@ -128,9 +128,9 @@ public class PullArrowVisualizer : MonoBehaviour
 
         _arrowRenderer.transform.localScale = new Vector3(scaleX, scaleY, 1f);
 
-        if (!_arrowRenderer.gameObject.activeSelf)
+        if (!_arrowRenderer.enabled)
         {
-            _arrowRenderer.gameObject.SetActive(true);
+            _arrowRenderer.enabled = true;
         }
     }
 
@@ -146,7 +146,7 @@ public class PullArrowVisualizer : MonoBehaviour
     {
         if (_arrowRenderer != null)
         {
-            _arrowRenderer.gameObject.SetActive(false);
+            _arrowRenderer.enabled = false;
         }
     }
 }
