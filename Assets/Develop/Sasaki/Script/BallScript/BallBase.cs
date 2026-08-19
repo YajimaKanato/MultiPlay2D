@@ -12,6 +12,7 @@ public abstract class BallBase : MonoBehaviour
     [Tooltip("転がる時の球の摩擦力")]
     [SerializeField] private float _friction = 0.99f;
 
+    private float _radiusFactor = 0.5f;  //半径変換係数
     protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -67,10 +68,13 @@ public abstract class BallBase : MonoBehaviour
     }
 
     /// <summary>
-    ///ボールの半径を更新する処理 
+    ///ボールの直径を更新、半径を求める処理
+    ///引数は(ボールの直径)
     /// </summary>
-    public void UpdateBallRadius()
+    public void UpdateBallDiameter(float diameter)
     {
-        _ballRadius = transform.localScale.x;
+        transform.localScale = new Vector3(diameter, diameter, diameter);
+
+        _ballRadius = diameter * _radiusFactor; 
     }
 }
