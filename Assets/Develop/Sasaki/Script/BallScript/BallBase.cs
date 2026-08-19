@@ -12,7 +12,6 @@ public abstract class BallBase : MonoBehaviour
     [Tooltip("転がる時の球の摩擦力")]
     [SerializeField] private float _friction = 0.99f;
 
-    private float _radiusFactor = 0.5f;  //半径変換係数
     protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -44,17 +43,17 @@ public abstract class BallBase : MonoBehaviour
 
     /// <summary>
     /// 速度ベクトルを更新する処理 (ショットで使用　＋　加速装置で使用)   
-    /// 引数は（速度ベクトル）
     /// </summary>
+    /// <param name="velocity">速度ベクトル</param>
     public void UpdateMoveVelocity(Vector3 velocity)
     {
         _rb.linearVelocity = velocity;
     }
 
     /// <summary>
-    /// 球の半径から回転を更新する処理　（進行方向へ回転）
+    /// 球の半径から回転を更新する処理
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="direction">移動方向（進行方向へ回転）</param>
     private void UpdateRotate(Vector3 direction)
     {     
         // 進行方向に応じた回転軸を求める式
@@ -68,13 +67,13 @@ public abstract class BallBase : MonoBehaviour
     }
 
     /// <summary>
-    ///ボールの直径を更新、半径を求める処理
-    ///引数は(ボールの直径)
+    /// 球の大きさを更新する処理
     /// </summary>
-    public void UpdateBallDiameter(float diameter)
+    /// <param name="radius">ボールの半径（直径に変換して適用する）</param>
+    public void UpdateBallRadius(float radius)
     {
-        transform.localScale = new Vector3(diameter, diameter, diameter);
+        transform.localScale = new Vector3(radius, radius, radius) * 2;
 
-        _ballRadius = diameter * _radiusFactor; 
+        _ballRadius = radius; 
     }
 }
