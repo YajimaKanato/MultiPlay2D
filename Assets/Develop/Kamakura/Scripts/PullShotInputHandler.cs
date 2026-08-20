@@ -53,7 +53,6 @@ public class PullShotInputHandler : MonoBehaviour
         {
             _targetRigidbody = GetComponent<Rigidbody>();
         }
-
     }
 
     private void Update()
@@ -65,66 +64,96 @@ public class PullShotInputHandler : MonoBehaviour
 
         float targetY = _targetRigidbody != null ? _targetRigidbody.transform.position.y : 0f;
 
-
         // ドラッグ開始
         if (currentPointer.press.wasPressedThisFrame)
         {
-            // UIをタップしている場合は入力を無視する
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(currentPointer.deviceId))
-            {
-                return;
-            }
-            if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 worldPos))
-            {
-                _isDragging = true;
-                _activePointerId = currentPointer.deviceId;
-                _dragStartPos = worldPos;
-                // ドラッグ開始位置を通知（Rigidbodyがある場合はその位置を優先）
-                Vector3 originPos = _targetRigidbody != null ? _targetRigidbody.position : worldPos;
-                _onDragStart?.Invoke(originPos);
-            }
+            HandleDragStart(currentPointer, targetY);
         }
         // ドラッグ中（矢印表示・予測線などの通知）
         else if (currentPointer.press.isPressed && _isDragging)
         {
-            if (currentPointer.deviceId != _activePointerId) return;
-            if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 currentWorldPos))
-            {
-                Vector3 dragVector = currentWorldPos - _dragStartPos;
-                dragVector.y = 0f;
-
-                float clampedDistance = Mathf.Clamp(dragVector.magnitude, 0f, _maxDragDistance);
-                float powerRatio = Mathf.Clamp01(clampedDistance / _maxDragDistance);
-
-                // ドラッグ更新位置を通知（Rigidbodyがある場合はその位置を優先）
-                Vector3 originPos = _targetRigidbody != null ? _targetRigidbody.position : _dragStartPos;
-                _onDragUpdate?.Invoke(originPos, dragVector, powerRatio);
-            }
+            HandleDragUpdate(currentPointer, targetY);
         }
         // ドラッグ終了（ショット発射またはキャンセル）
         else if (currentPointer.press.wasReleasedThisFrame && _isDragging)
         {
-            if (currentPointer.deviceId != _activePointerId) return;
-            _isDragging = false;
-            _activePointerId = -1;
-            _onDragEnd?.Invoke();
-
-            if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 currentWorldPos))
-            {
-                Vector3 dragVector = currentWorldPos - _dragStartPos;
-                dragVector.y = 0f;
-                float dragDistance = dragVector.magnitude;
-
-                if (dragDistance < _minDragDistance)
-                {
-                    GameDebug.Log("[PullShotInputHandler] ドラッグ距離不足のためキャンセル", this);
-                    return;
-                }
-
-                ShootBall(dragVector);
-            }
+            HandleDragEnd(currentPointer, targetY);
         }
     }
+
+    /// <summary>
+    /// ドラッグ（引っ張り）開始時の処理を行う
+    /// </summary>
+    /// <param name="currentPointer">現在のポインター入力</param>
+    /// <param name="targetY">投影基準となるワールドY座標</param>
+    private void HandleDragStart(Pointer currentPointer, float targetY)
+    {
+        // UIをタップしている場合は入力を無視する
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(currentPointer.deviceId))
+        {
+            return;
+        }
+        if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 worldPos))
+        {
+            _isDragging = true;
+            _activePointerId = currentPointer.deviceId;
+            _dragStartPos = worldPos;
+            // ドラッグ開始位置を通知（Rigidbodyがある場合はその位置を優先）
+            Vector3 originPos = _targetRigidbody != null ? _targetRigidbody.position : worldPos;
+            _onDragStart?.Invoke(originPos);
+        }
+    }
+
+    /// <summary>
+    /// ドラッグ（引っ張り）中の処理を行い、移動量やパワーを通知する
+    /// </summary>
+    /// <param name="currentPointer">現在のポインター入力</param>
+    /// <param name="targetY">投影基準となるワールドY座標</param>
+    private void HandleDragUpdate(Pointer currentPointer, float targetY)
+    {
+        if (currentPointer.deviceId != _activePointerId) return;
+        if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 currentWorldPos))
+        {
+            Vector3 dragVector = currentWorldPos - _dragStartPos;
+            dragVector.y = 0f;
+
+            float clampedDistance = Mathf.Clamp(dragVector.magnitude, 0f, _maxDragDistance);
+            float powerRatio = Mathf.Clamp01(clampedDistance / _maxDragDistance);
+
+            // ドラッグ更新位置を通知（Rigidbodyがある場合はその位置を優先）
+            Vector3 originPos = _targetRigidbody != null ? _targetRigidbody.position : _dragStartPos;
+            _onDragUpdate?.Invoke(originPos, dragVector, powerRatio);
+        }
+    }
+
+    /// <summary>
+    /// ドラッグ（引っ張り）終了時の処理を行い、ショットを発射またはキャンセルする
+    /// </summary>
+    /// <param name="currentPointer">現在のポインター入力</param>
+    /// <param name="targetY">投影基準となるワールドY座標</param>
+    private void HandleDragEnd(Pointer currentPointer, float targetY)
+    {
+        if (currentPointer.deviceId != _activePointerId) return;
+        _isDragging = false;
+        _activePointerId = -1;
+        _onDragEnd?.Invoke();
+
+        if (TryGetWorldPosition(currentPointer.position.ReadValue(), targetY, out Vector3 currentWorldPos))
+        {
+            Vector3 dragVector = currentWorldPos - _dragStartPos;
+            dragVector.y = 0f;
+            float dragDistance = dragVector.magnitude;
+
+            if (dragDistance < _minDragDistance)
+            {
+                GameDebug.Log("[PullShotInputHandler] ドラッグ距離不足のためキャンセル", this);
+                return;
+            }
+
+            ShootBall(dragVector);
+        }
+    }
+
     private void OnDisable()
     {
         // ドラッグ中に無効化された場合、ドラッグ終了イベントを発火
@@ -139,6 +168,10 @@ public class PullShotInputHandler : MonoBehaviour
     /// <summary>
     /// スクリーン座標を、指定した高さ（Y座標）のXZ平面上のワールド座標に変換する
     /// </summary>
+    /// <param name="screenPosition">スクリーン座標</param>
+    /// <param name="groundY">基準となる高さ（Y座標）</param>
+    /// <param name="worldPosition">変換後のワールド座標</param>
+    /// <returns>交点が見つかったかどうか</returns>
     private bool TryGetWorldPosition(Vector2 screenPosition, float groundY, out Vector3 worldPosition)
     {
         if (_camera == null)
@@ -160,11 +193,10 @@ public class PullShotInputHandler : MonoBehaviour
         return false;
     }
 
-
     /// <summary>
     /// シュートを実行する
-    /// <param name="dragVector">ドラッグベクトル（現在位置 - 開始位置</param>
     /// </summary>
+    /// <param name="dragVector">ドラッグベクトル（現在位置 - 開始位置）</param>
     private void ShootBall(Vector3 dragVector)
     {
         if (_targetRigidbody == null) return;
@@ -187,5 +219,4 @@ public class PullShotInputHandler : MonoBehaviour
         _targetRigidbody.AddForce(shotForce, ForceMode.Impulse);
         _onShot?.Invoke(shotForce);
     }
-
 }
