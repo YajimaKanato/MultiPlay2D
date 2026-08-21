@@ -1,56 +1,33 @@
 using UnityEngine;
 
-
+/// <summary>
+/// 壁の反射処理
+/// </summary>
 public class WallController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     /// <summary>
-    /// 衝突したボールの反射処理
+    /// 衝突した球の判定、反射の計算処理
     /// </summary>
-    /// <param name="collision"></param>
+    /// <param name="collision">壁に衝突した球</param>
     private void OnCollisionEnter(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Ball")) return;
 
-        //BallBase ball = collision.gameObject.GetComponent<BallBase>();
+        Rigidbody rigidbody = collision.rigidbody;
+        BallBase ballBase = collision.gameObject.GetComponent<BallBase>();
+        WallReflectCooldownController reflectController = collision.gameObject.GetComponent<WallReflectCooldownController>();
 
-        //if (ball == null) return;
+        if (rigidbody == null || ballBase == null || reflectController == null
+            || reflectController.CanReflect == false) return;
+
+        Vector3 velocity = rigidbody.linearVelocity;
 
         // 衝突点の法線（壁の向き）
         Vector3 wallNormal = collision.contacts[0].normal;
 
-        // 球に反射ベクトルを渡す
-        //CalculateReflectionVelocity(wallNormal, collision.gameObject.);
-    }
+        // 完全反射
+        velocity = Vector3.Reflect(velocity, wallNormal);
 
-    /// <summary>
-    /// 壁反射処理と壁の速度更新処理
-    /// </summary>
-    /// <param name="wallNormal"></param>
-    /// <param name="addForce"></param>
-    private void CalculateReflectionVelocity(Vector3 wallNormal)
-    {
-        //if (!_canReflect) return;
-
-        //// 現在の速度を内部変数に統一
-        //_velocity = _rb.linearVelocity;
-        //Debug.Log(_velocity);
-
-        //// 完全反射
-        //_velocity = Vector3.Reflect(_velocity, wallNormal);
-
-        // Rigidbody に反映
-
+        ballBase.UpdateMoveVelocity(velocity);
     }
 }

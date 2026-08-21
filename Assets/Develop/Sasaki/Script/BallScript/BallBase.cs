@@ -6,11 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class BallBase : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
-
+    
+    [Header("球の設定")]
+    [Tooltip("球の半径")]
     [SerializeField] private float _ballRadius;
-    [Tooltip("転がる時の球の摩擦力")]
+    [Tooltip("球の摩擦力")]
     [SerializeField] private float _friction = 0.99f;
+
+    [SerializeField] private Rigidbody _rb;
 
     protected virtual void Awake()
     {
