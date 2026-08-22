@@ -8,15 +8,20 @@ using Fusion;
 public class RoomSelectingWindowBuilder : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _roomSelectButtonPrefab;
+    private UIRoomSelectButton _roomSelectButtonPrefab;
     [SerializeField]
     private StartRoomEvent _joinRoomEvent;
     [SerializeField]
     private float _buttonUnderPadding;
 
-    void Start()
+    void Awake()
     {
         Destroy(transform.GetChild(0).gameObject);
+
+        if(_roomSelectButtonPrefab == null)
+        {
+            GameDebug.LogError("ボタンプレハブがアサインされていません。");
+        }
     }
 
     /// <summary>
@@ -27,10 +32,9 @@ public class RoomSelectingWindowBuilder : MonoBehaviour
     {
         for(int i = 0; i < searchedRooms.Count; i++)
         {
-            var roomSelectButton = Instantiate(_roomSelectButtonPrefab).GetComponent<UIRoomSelectButton>();
+            var roomSelectButton = Instantiate(_roomSelectButtonPrefab);
             roomSelectButton.AssignRoom(searchedRooms[i], _joinRoomEvent);
             roomSelectButton.transform.SetParent(transform);
-            ((RectTransform)roomSelectButton.transform).anchoredPosition = Vector3.down * (i * _buttonUnderPadding);
             roomSelectButton.transform.localScale = _roomSelectButtonPrefab.transform.localScale;
         }
     }

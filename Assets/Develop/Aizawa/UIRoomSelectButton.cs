@@ -11,11 +11,6 @@ public class UIRoomSelectButton : MonoBehaviour
 
     private string _roomName;
 
-    void Start()
-    {
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = _roomName;
-    }
-
     /// <summary>
     /// 部屋合流時の処理
     /// </summary>
@@ -32,5 +27,6 @@ public class UIRoomSelectButton : MonoBehaviour
     {
         _roomName = session.Name;
         _joinRoomEvent = joinEvent;
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = _roomName;
     }
 }
