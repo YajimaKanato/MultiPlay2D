@@ -10,12 +10,17 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] int _maxPlayerCount = 4;
     [SerializeField] SceneIndex _startSceneIndex = 0;
+    [SerializeField]
+    RoomSearchedEvent _roomSearchedEvent;
 
     NetworkRunner _runner;
     public NetworkRunner Runner => _runner;
 
     static FusionRoomManager _instance;
     public static FusionRoomManager Instance => _instance;
+
+    List<SessionInfo> _allRooms;
+    public List<SessionInfo> AllRooms => _allRooms;
 
     private void Awake()
     {
@@ -49,7 +54,11 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,
             PlayerCount = _maxPlayerCount,
-            SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
+            SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>(),
+            SessionProperties = new Dictionary<string, SessionProperty>
+            {
+                {"PassKey", ""}
+            }
         });
 
         if (!result.Ok)
@@ -66,6 +75,7 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         CreateRunner();
 
+        _allRooms = null;
         var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
 
         if (!result.Ok)
@@ -163,7 +173,10 @@ public class FusionRoomManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        _allRooms = sessionList.Where(session => session.PlayerCount < session.MaxPlayers).Where(session => string.IsNullOrWhiteSpace((string)session.Properties["PassKey"])).ToList();
         GameDebug.Log($"ルームリストが更新されました : {sessionList.Count}件のルームが見つかりました");
+        _allRooms.ForEach(session => GameDebug.Log($"入室可能: {session.Name}"));
+        _roomSearchedEvent?.Invoke(_allRooms);
     }
 
 #region Fusionのコールバックたち
