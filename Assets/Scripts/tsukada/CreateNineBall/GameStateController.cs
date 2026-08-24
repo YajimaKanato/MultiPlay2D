@@ -49,8 +49,11 @@ public class GameStateController : MonoBehaviour
     [SerializeField] private TurnController _turnController = default;
     [SerializeField] private CollideBalls _collideBalls = default;
 
-    /// <summary> ショットしたかどうかのフラグ。ターン移行毎にfalseに戻す。 </summary>
+    /// <summary> ショットしたかのフラグ。ターン移行毎にfalseに戻す。 </summary>
     private bool _isShotted = false;
+
+    /// <summary> 全ての球が停止したかのフラグ </summary>
+    private bool _hadAllBallsStop = false;
 
     /// <summary> クリア(合法的に9ボールがポケットに落ちたかどうかのフラグ </summary>
     private bool _isGameClear = false;
@@ -97,7 +100,7 @@ public class GameStateController : MonoBehaviour
     {
         //撃ったらドラフトフェーズ開始
         //if (ブレイクショットが終了(全ての球が停止)したら)
-        if (Input.GetKeyDown(KeyCode.Return))   //仮の条件
+        if (_isShotted && _hadAllBallsStop)
         {
             ChangeGameState(GameState.DraftFase);
         }
@@ -193,4 +196,10 @@ public class GameStateController : MonoBehaviour
         _isShotted = true;
     }
 
+    [ContextMenu("全ての球が停止しました")]
+    /// <summary> 全ての球が停止したら呼ばれ、停止済みフラグを立てるメソッド </summary>
+    public void NotifyAllBallsHadStop()
+    {
+
+    }
 }
