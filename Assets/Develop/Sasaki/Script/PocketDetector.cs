@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class PocketDetector : MonoBehaviour
 {
-    //球がポケットに入ったことを通知するイベント
     public static event Action<GameObject> OnBallPocketed;
 
+    /// <summary>
+    /// 球がポケットに入ったことを通知し、イベントを呼び出す処理
+    /// </summary>
+    /// <param name="other">落下した球</param>
     private void OnTriggerEnter(Collider other)
     {
 
