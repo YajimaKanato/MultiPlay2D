@@ -11,7 +11,6 @@ public class PocketDetector : MonoBehaviour
 
         if (other.gameObject.CompareTag("Ball"))
         {
-            GameDebug.Log("ボールが接触しました");
             OnBallPocketed?.Invoke(other.gameObject);
         }
         
