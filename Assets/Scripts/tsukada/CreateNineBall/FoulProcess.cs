@@ -25,7 +25,7 @@ public class FoulProcess : MonoBehaviour
     /// <summary> 不正に9番球をポケットした際のファール処理 </summary>
     public void FoulOfPocketNineBall()
     {
-        GameDebug.Log($"{_turnController.CurrentTurn} が不正に9番球をポケットしました。9番球が初期位置に戻ります。");
+        GameDebug.Log($"{_turnController.CurrentTurn} が不正に9番球をポケットしました。");
         _hasFoulOfPocketNineBall = true;
     }
 
