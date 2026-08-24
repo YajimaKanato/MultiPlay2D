@@ -18,8 +18,10 @@ public class TurnController : MonoBehaviour
         count
     }
 
+    /// <summary> 参加プレイヤーを格納するList </summary>
     List<Turn> players = null;
 
+    /// <summary> 現在誰のターン </summary>
     [SerializeField] Turn _currentTurn = Turn.Player1;
 
     public Turn CurrentTurn => _currentTurn;

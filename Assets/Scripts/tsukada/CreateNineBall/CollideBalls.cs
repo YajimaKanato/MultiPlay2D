@@ -2,9 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-/// <summary>
-/// 9ボールで、手球がボールに衝突した時の処理を行うクラス
-/// </summary>
+/// <summary> 9ボールで、手球がボールに衝突した時の処理を行うクラス </summary>
 public class CollideBalls : MonoBehaviour
 {
     [Tooltip("存在している的球の番号を格納する配列")]
@@ -27,35 +25,35 @@ public class CollideBalls : MonoBehaviour
 
 
     [ContextMenu("削除①")]
-    void delate1()
+    void delate1()      //Test用
     {
         RemoveObjectBallNum(1);
     }
     [ContextMenu("削除②")]
-    void delate2()
+    void delate2()      //Test用
     {
         RemoveObjectBallNum(2);
     }
     [ContextMenu("削除③")]
-    void delate3()
+    void delate3()      //Test用
     {
         RemoveObjectBallNum(3);
     }
     [ContextMenu("削除④")]
-    void delete4()
+    void delete4()      //Test用
     {
         RemoveObjectBallNum(4);
     }
 
     [ContextMenu("最小的球")]
-    void test2()
+    void test2()        //Test用
     {
         CheckMinObjectBallNum();
         GameDebug.Log($"最小値の的球は {_minObjectBallNumber} です。");
     }
 
     [ContextMenu("現在の的球")]
-    void test3()
+    void test3()        //Test用
     {
         GameDebug.Log($"現在の的球は {string.Join(", ", _existObjectBallNumber)} です。");
     }

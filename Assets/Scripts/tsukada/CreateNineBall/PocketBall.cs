@@ -1,8 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// 9ボールで、ボールがポケットに入った時の処理を行うクラス
-/// </summary>
+/// <summary> 9ボールで、ボールがポケットに入った時の処理を行うクラス </summary>
 public class PocketBall : MonoBehaviour
 {
     [SerializeField] FoulProcess _foulProcess = default;
@@ -11,7 +9,8 @@ public class PocketBall : MonoBehaviour
 
     [SerializeField] GameStateController _gameStateController = default;
 
-
+    /// <summary> ポケットに落ちた球によってファールや勝利条件達成を判定するメソッド </summary>
+    /// <param name="ballNumber"></param>
     public void PocketObjectBall(int ballNumber)
     {
         if (ballNumber == 0)        //手球が落ちたらファール

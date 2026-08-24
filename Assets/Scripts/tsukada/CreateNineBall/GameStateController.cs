@@ -52,7 +52,7 @@ public class GameStateController : MonoBehaviour
     /// <summary> ショットしたかどうかのフラグ。ターン移行毎にfalseに戻す。 </summary>
     private bool _isShotted = false;
 
-    /// <summary> 合法的に9ボールがポケットに落ちたかどうかのフラグ </summary>
+    /// <summary> クリア(合法的に9ボールがポケットに落ちたかどうかのフラグ </summary>
     private bool _isGameClear = false;
 
     /// <summary> 結果を表示したかのフラグ </summary>
@@ -70,6 +70,7 @@ public class GameStateController : MonoBehaviour
 
     void Update()
     {
+        //フェーズごとに異なるUpdate処理を行う
         switch (_currentGameState)
         {
             case GameState.ReadyFase: UpdateReadyFase(); break;
@@ -89,7 +90,6 @@ public class GameStateController : MonoBehaviour
         {
             ChangeGameState(GameState.BreakeShotFase);
         }
-        //ChangeGameState(GameState.BreakeShotFase);
     }
 
     /// <summary> ブレイクショットフェーズ中のUpdate処理 </summary>
@@ -101,7 +101,6 @@ public class GameStateController : MonoBehaviour
         {
             ChangeGameState(GameState.DraftFase);
         }
-        //ChangeGameState(GameState.DraftFase);
     }
 
     /// <summary> ドラフトフェーズ中のUpdate処理 </summary>
@@ -118,14 +117,11 @@ public class GameStateController : MonoBehaviour
         {
             ChangeGameState(GameState.ShotFase);
         }
-        //ChangeGameState(GameState.ShotFase);
     }
 
     /// <summary> ショットフェーズ中のUpdate処理。結果の確認も含む。 </summary>
     void UpdateShotFase()
     {
-
-        
         if (_timer >= _shotFaseTime)        //(ショット結果が収束する、もしくは)制限時間超えたらフェーズ移行
         {
             ChangeGameState(GameState.DraftFase);
@@ -145,10 +141,10 @@ public class GameStateController : MonoBehaviour
     /// <summary> 結果フェーズ中のUpdate処理 </summary>
     void UpdateResultFase()
     {
-        if(!_isResultDisplayed)
+        if(!_isResultDisplayed)     //最初の一度だけ実行
         {
             //試合結果、スコアを表示
-            GameDebug.Log($"ゲームが終了しました。<br> {_turnController.CurrentTurn} が勝ちました。");
+            GameDebug.Log($"ゲームが終了しました。 {_turnController.CurrentTurn} が勝利しました。");
             _isResultDisplayed = true;
         }
 
@@ -178,19 +174,20 @@ public class GameStateController : MonoBehaviour
     }
 
     [ContextMenu("ショット後、DraftFaseに強制移行")]
-    public void ForceChangeDraftFase()
+    public void ForceChangeDraftFase()      //Test用
     {
         ChangeGameState(GameState.DraftFase);
     }
 
     [ContextMenu("MeetConditionOfGameClear")]
-    /// <summary> ゲームクリア条件を満たした場合に呼び出されるメソッド </summary>
+    /// <summary> ゲームクリア条件を満たしたらに呼ばれ、クリアフラグを立てるメソッド </summary>
     public void MeetConditionOfGameClear()
     {
         _isGameClear = true;
     }
 
     [ContextMenu("ショットしました")]
+    /// <summary> ショットしたら呼ばれ、ショット済みフラグを立てるメソッド </summary>
     public void NotifyShotted()
     {
         _isShotted = true;
