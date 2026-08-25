@@ -1,0 +1,38 @@
+{
+  "ProductName": "MultiPlay2D",
+  "ProductId": "1c5217184bdb492790823d1b9b426d8d",
+  "ProductVersion": "0.1",
+  "imported": true,
+  "Clients": [
+    {
+      "Value": {
+        "ClientId": "xyza7891gjIIoJQmIKoClxYF1s6fOPO5",
+        "ClientSecret": "OzhuPS6PAO2DTjzommw65nJVj1xpvJ8ovFsDV4/3CXw",
+        "EncryptionKey": "16247647B0C0C97974823E2D86990BE37337225874CFE2A3E9C2A3F52C9A037F"
+      },
+      "Name": "Client"
+    }
+  ],
+  "Environments": {
+    "Deployments": [
+      {
+        "Value": {
+          "SandboxId": {
+            "Value": "b6e1609e9bd84d96b6f89cf641fc8e93"
+          },
+          "DeploymentId": "63b1e4bb96f449bfb69748c183e65785"
+        },
+        "Name": "Deployment"
+      }
+    ],
+    "Sandboxes": [
+      {
+        "Value": {
+          "Value": "b6e1609e9bd84d96b6f89cf641fc8e93"
+        },
+        "Name": "Sandbox"
+      }
+    ]
+  },
+  "schemaVersion": "1.0"
+}
