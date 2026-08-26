@@ -999,6 +999,123 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 804253559}
   m_CullTransparentMesh: 1
+--- !u!1 &863467740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 863467742}
+  - component: {fileID: 863467741}
+  - component: {fileID: 863467743}
+  m_Layer: 0
+  m_Name: FusionRoomManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &863467741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863467740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75a34cf201f9e481fa1902a4dbecc769, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FusionRoomManager
+  _maxPlayerCount: 4
+  _startSceneIndex: 0
+  _roomSearchedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1756340279}
+        m_TargetAssemblyTypeName: RoomSelectingWindowBuilder, Assembly-CSharp
+        m_MethodName: Build
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &863467742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863467740}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &863467743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863467740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c91229286302b4dc98378b383bc946ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _roomCodeField: {fileID: 877422595}
+  _createRoomEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 863467741}
+        m_TargetAssemblyTypeName: FusionRoomManager, Assembly-CSharp
+        m_MethodName: CreateRoom
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _searchRoomEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 863467741}
+        m_TargetAssemblyTypeName: FusionRoomManager, Assembly-CSharp
+        m_MethodName: SearchRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 626232871}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &877422593
 GameObject:
   m_ObjectHideFlags: 0
@@ -1177,63 +1294,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877422593}
   m_CullTransparentMesh: 1
---- !u!1 &998002112
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 998002113}
-  - component: {fileID: 998002115}
-  - component: {fileID: 998002114}
-  m_Layer: 0
-  m_Name: FishNetRoomManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &998002113
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998002112}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 83.4372, y: 157.6366, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &998002114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998002112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa18cbd1d07fe4de4b91838224252222, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!114 &998002115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998002112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b0b1d62d991d41f2b51cd4d8140c619, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &1029539864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1392,7 +1452,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 863467743}
         m_TargetAssemblyTypeName: FusionRoomController, Assembly-CSharp
         m_MethodName: SearchRoom
         m_Mode: 1
@@ -2080,7 +2140,7 @@ MonoBehaviour:
   _joinRoomEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 863467741}
         m_TargetAssemblyTypeName: FusionRoomManager, Assembly-CSharp
         m_MethodName: JoinRoom
         m_Mode: 0
@@ -2439,7 +2499,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 863467743}
         m_TargetAssemblyTypeName: FusionRoomController, Assembly-CSharp
         m_MethodName: CreateRoom
         m_Mode: 1
@@ -2500,7 +2560,7 @@ PrefabInstance:
     - target: {fileID: 470984807235567542, guid: 988b0326e60494ab5bdbe0aeb0335600, type: 3}
       propertyPath: _joinRoomEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 863467741}
     - target: {fileID: 1498824404681374091, guid: 988b0326e60494ab5bdbe0aeb0335600, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2607,6 +2667,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 128403505}
-  - {fileID: 998002113}
+  - {fileID: 863467742}
   - {fileID: 616804948}
   - {fileID: 1798583463}
