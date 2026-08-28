@@ -1,40 +1,22 @@
-using JetBrains.Annotations;
-using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
-
-/// <summary>
-/// 9ボールで、ターンの切り替えを行うクラス
-/// </summary>
+/// <summary> 9ボールで、ターンの切り替えを行うクラス </summary>
 public class TurnController : MonoBehaviour
 {
-    public enum Turn
-    {
-        Player1,
-        Player2,
-        Player3,
-        Player4,
-        count
-    }
-
     /// <summary> 参加プレイヤーを格納するList </summary>
     List<Turn> players = null;
 
     /// <summary> 現在誰のターン </summary>
     [SerializeField] Turn _currentTurn = Turn.Player1;
 
+    //プロパティ
     public Turn CurrentTurn => _currentTurn;
 
-    [ContextMenu("GetPlayerNum")]
-    void test()
-    {
-        ConfirmPlayerNum(4);
-    }
 
     /// <summary> プレイヤー人数を確定させるメソッド </summary>
     /// param name="playerNum"> プレイヤー人数 </param>
-    //参加人数情報を保持しているクラスが、試合開始時に呼び出したい。途中退出が発生した際にplayer配列を調整するメソッドも必要かも。
+    //参加人数情報を保持しているクラスが、試合開始時に呼び出したい
     public void ConfirmPlayerNum(int playerNum)
     {
         if (playerNum > (int)Turn.count) return;
@@ -51,14 +33,10 @@ public class TurnController : MonoBehaviour
 
     ///</summary> 途中退出をしたプレイヤーを参加プレイヤーリストから削除するメソッド <summary>
     /// param name="playerNum"> 途中退出したプレイヤーの番号 </param>
-    public void RemovePlayer()
+    public void RemovePlayer(int playerNum)
     {
-        players.Remove((Turn)2);
+        players.Remove((Turn)playerNum - 1);
     }
-    //public void RemovePlayer(int playerNum)
-    //{
-    //    players.Remove((Turn)playerNum - 1);
-    //}
 
 
     /// <summary> ターンの切り替えを行うメソッド。ショットの結果確認終了時に呼び出したい。 </summary>

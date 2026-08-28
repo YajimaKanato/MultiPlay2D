@@ -1,27 +1,25 @@
-using NUnit.Framework.Interfaces;
 using UnityEngine;
-using GameState = GameStateController.GameState;
 
 
 /// <summary> ファールに関する処理を行うクラス </summary>
 public class FoulProcess : MonoBehaviour
 {
-    [Tooltip("不正に9番球をポケットしたファールの有無を管理するフラグ")]
+    ///<summary> 不正に9番球をポケットしたファールの有無を管理するフラグ </summary>
     bool _hasFoulOfPocketNineBall = false;
 
-    [Tooltip("不正に9番球をポケットしたファール以外のファールの発生有無を管理するフラグ")]
+    ///<summary> 不正に9番球をポケットしたファール以外のファールの発生有無を管理するフラグ </summary>
     bool _hasFoul = false;
 
-    [SerializeField] TurnController _turnController = default;
-    [SerializeField] GameStateController _gameStateController = default;
+    [SerializeField] TurnController _turnController = null;
+    [SerializeField] GameStateController _gameStateController = null;
 
+    /// <summary> 一般的なファール </summary>
     public void Foul()
     {
         GameDebug.Log($"{_turnController.CurrentTurn} がファールしました。");
         _hasFoul = true;
     }
 
-    [ContextMenu("FoulOfPocketNineBall")]
     /// <summary> 不正に9番球をポケットした際のファール処理 </summary>
     public void FoulOfPocketNineBall()
     {
@@ -29,7 +27,6 @@ public class FoulProcess : MonoBehaviour
         _hasFoulOfPocketNineBall = true;
     }
 
-    [ContextMenu("ファール処理")]
     /// <summary> ファール結果を統合し、結果によりファール処理を行うメソッド。全ての球が停止したら呼び出されたい </summary>
     public void IntegrationFoulResult()
     {

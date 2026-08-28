@@ -1,41 +1,10 @@
 using UnityEngine;
 
-/// <summary>
-/// 9ボールで、ゲームの進行状態を管理するクラス
-/// </summary>
+/// <summary>  9ボールで、ゲームの進行状態を管理するクラス </summary>
 public class GameStateController : MonoBehaviour
 {
-
-    public enum GameState
-    {
-        /// <summary>
-        /// ゲーム開始前の準備フェーズ
-        /// </summary>
-        ReadyFase,
-        /// <summary>
-        /// ブレイクショットのフェーズ
-        /// </summary>
-        BreakeShotFase,
-        /// <summary>
-        /// ドラフトのフェーズ。ドラフトエフェクトの選択と使用の両方を含む
-        /// </summary>
-        DraftFase,
-        /// <summary>
-        /// 各プレイヤーのショットのフェーズ
-        /// </summary>
-        //FirstPlayerTurnFase, SecondPlayerTurnFase, ThirdPlayerTurnFase, FourthPlayerTurnFase,
-        /// <summary>
-        /// ショットのフェーズ。ショットの実行と結果の確認を含む
-        /// </summary>
-        ShotFase,
-        /// <summary>
-        /// ゲーム終了後のフェーズ。試合結果の確認や、「もう一度遊ぶ、ホームに戻る」などの選択を含む
-        /// </summary>
-        ResultFase,
-    }
-
-    [Tooltip("現在のゲーム状態")]
-    GameState _currentGameState = GameState.ReadyFase;
+    // <summary> 現在のゲームフェーズ </summary>
+    [SerializeField] GameState _currentGameState = GameState.ReadyFase;       //ReadyFaseから開始する
 
     [Tooltip("ドラフトフェーズの制限時間")]
     [SerializeField] private float _draftFaseTime = 30.0f;
@@ -46,8 +15,8 @@ public class GameStateController : MonoBehaviour
     //タイマー用の変数
     private float _timer = 0.0f;
 
-    [SerializeField] private TurnController _turnController = default;
-    [SerializeField] private CollideBalls _collideBalls = default;
+    [SerializeField] private TurnController _turnController = null;
+    [SerializeField] private CollideBalls _collideBalls = null;
 
     /// <summary> ショットしたかのフラグ。ターン移行毎にfalseに戻す。 </summary>
     private bool _isShotted = false;
@@ -77,9 +46,10 @@ public class GameStateController : MonoBehaviour
         switch (_currentGameState)
         {
             case GameState.ReadyFase: UpdateReadyFase(); break;
-            case GameState.BreakeShotFase: UpdateBreakeShot(); break;
+            case GameState.BreakeShotFase: UpdateBreakeShotFase(); break;
             case GameState.DraftFase: UpdateDraftFase(); break;
             case GameState.ShotFase: UpdateShotFase(); break;
+            case GameState.FoulFase: UpdateFoulFase(); break;
             case GameState.ResultFase: UpdateResultFase(); break;
         }
     }
@@ -96,7 +66,7 @@ public class GameStateController : MonoBehaviour
     }
 
     /// <summary> ブレイクショットフェーズ中のUpdate処理 </summary>
-    void UpdateBreakeShot()
+    void UpdateBreakeShotFase()
     {
         //撃ったらドラフトフェーズ開始
         //if (ブレイクショットが終了(全ての球が停止)したら)
@@ -140,6 +110,12 @@ public class GameStateController : MonoBehaviour
         _timer += Time.deltaTime;
     }
 
+    /// <summary> ファールフェーズ中のUpdate処理 </summary>
+    void UpdateFoulFase()
+    {
+
+    }
+
     
     /// <summary> 結果フェーズ中のUpdate処理 </summary>
     void UpdateResultFase()
@@ -168,38 +144,32 @@ public class GameStateController : MonoBehaviour
         {
             _turnController.ChangeTurn();
         }
-
-        _collideBalls.CheckMinObjectBallNum();      //存在する的球の中の最小値を求める
+        else if (newGameState == GameState.ShotFase)
+        {
+            _collideBalls.CheckMinObjectBallNum();      //存在する的球の中の最小値を求める
+        }
 
         _isShotted = false;
         _timer = 0f;
         _collideBalls.ResetCollideObjectBallFlag();      //最小値の的球に衝突したかどうかのフラグをリセット
     }
 
-    [ContextMenu("ショット後、DraftFaseに強制移行")]
-    public void ForceChangeDraftFase()      //Test用
-    {
-        ChangeGameState(GameState.DraftFase);
-    }
 
-    [ContextMenu("MeetConditionOfGameClear")]
     /// <summary> ゲームクリア条件を満たしたらに呼ばれ、クリアフラグを立てるメソッド </summary>
     public void MeetConditionOfGameClear()
     {
         _isGameClear = true;
     }
 
-    [ContextMenu("ショットしました")]
     /// <summary> ショットしたら呼ばれ、ショット済みフラグを立てるメソッド </summary>
     public void NotifyShotted()
     {
         _isShotted = true;
     }
 
-    [ContextMenu("全ての球が停止しました")]
     /// <summary> 全ての球が停止したら呼ばれ、停止済みフラグを立てるメソッド </summary>
     public void NotifyAllBallsHadStop()
     {
-
+        _hadAllBallsStop = true;
     }
 }

@@ -3,11 +3,11 @@ using UnityEngine;
 /// <summary> 9ボールで、ボールがポケットに入った時の処理を行うクラス </summary>
 public class PocketBall : MonoBehaviour
 {
-    [SerializeField] FoulProcess _foulProcess = default;
+    [SerializeField] FoulProcess _foulProcess = null;
 
-    [SerializeField] CollideBalls _collideBalls = default;
+    [SerializeField] CollideBalls _collideBalls = null;
 
-    [SerializeField] GameStateController _gameStateController = default;
+    [SerializeField] GameStateController _gameStateController = null;
 
     /// <summary> ポケットに落ちた球によってファールや勝利条件達成を判定するメソッド </summary>
     /// <param name="ballNumber"></param>
@@ -31,13 +31,11 @@ public class PocketBall : MonoBehaviour
                 GameDebug.Log("不正に9ボールが落ちました。");
                 _foulProcess.FoulOfPocketNineBall();
             }
-            
         }
         else
         {
             GameDebug.Log($"的球 {ballNumber} が落ちました。");
             _collideBalls.RemoveObjectBallNum(ballNumber);      //落ちた的球の番号を配列から削除
         }
-        
     }
 }
