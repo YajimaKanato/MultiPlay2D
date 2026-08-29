@@ -24,6 +24,12 @@ public class GameStateController : MonoBehaviour
     /// <summary> 全ての球が停止したかのフラグ </summary>
     private bool _hadAllBallsStop = false;
 
+    /// <summary> 何もポケットに落ちなかったかどうかのフラグ </summary>
+    private bool _hadPocketAnyBall = false;
+
+    /// <summary> ファールしたかどうかのフラグ </summary>
+    private bool _hadFoul = false;
+
     /// <summary> クリア(合法的に9ボールがポケットに落ちたかどうかのフラグ </summary>
     private bool _isGameClear = false;
 
@@ -101,7 +107,7 @@ public class GameStateController : MonoBehaviour
         }
 
         //if(ショット後、9ボールがポケットに落ちたら)
-        if (_isShotted && _isGameClear)
+        if (_isShotted && !_hadFoul && _isGameClear)
         {
             ChangeGameState(GameState.ResultFase);
         }
@@ -113,7 +119,9 @@ public class GameStateController : MonoBehaviour
     /// <summary> ファールフェーズ中のUpdate処理 </summary>
     void UpdateFoulFase()
     {
-
+        //_collideBallsの_pocketBallsを参照し、含まれるボールを初期位置に戻すメソッドを呼び出す
+        //if(手球を好きな場所へ配置した場合(配置した通知を受け取った場合))
+        ChangeGameState(GameState.DraftFase);
     }
 
     
@@ -139,8 +147,17 @@ public class GameStateController : MonoBehaviour
 
         GameDebug.Log($"フェーズが {newGameState} に移行しました");
 
-        //ドラフトフェーズへの移行時は、ターンを切り替える
+        //ドラフトフェーズへの移行時
         if (newGameState == GameState.DraftFase)
+        {
+            _collideBalls.RemoveObjectBallNum();        //
+
+            if (!_hadPocketAnyBall)         //なにもポケットに入らなかった場合(ファールも起きず、合法的にポケットに的球を落としすらしなかった場合)
+            {
+                _turnController.ChangeTurn();
+            }
+        }
+        else if (newGameState == GameState.FoulFase)
         {
             _turnController.ChangeTurn();
         }
@@ -149,9 +166,13 @@ public class GameStateController : MonoBehaviour
             _collideBalls.CheckMinObjectBallNum();      //存在する的球の中の最小値を求める
         }
 
+        _hadFoul = false;
         _isShotted = false;
+        _hadPocketAnyBall = false;
+        _isGameClear = false;
         _timer = 0f;
         _collideBalls.ResetCollideObjectBallFlag();      //最小値の的球に衝突したかどうかのフラグをリセット
+        _collideBalls.ResetMemoryOfPocketBalls();        //ポケットに落ちたボールの記憶をリセット
     }
 
 
@@ -161,10 +182,22 @@ public class GameStateController : MonoBehaviour
         _isGameClear = true;
     }
 
+    /// <summary> 何かしらのボールがポケットに落ちたことを通知するメソッド </summary>
+    public void NotifyPocketedAnyBall()
+    {
+        _hadPocketAnyBall = true;
+    }
+
     /// <summary> ショットしたら呼ばれ、ショット済みフラグを立てるメソッド </summary>
     public void NotifyShotted()
     {
         _isShotted = true;
+    }
+
+    /// <summary> ファールしたら、ファールフラグを立てるメソッド </summary>
+    public void NotifyFouled()
+    {
+        _hadFoul = true;
     }
 
     /// <summary> 全ての球が停止したら呼ばれ、停止済みフラグを立てるメソッド </summary>

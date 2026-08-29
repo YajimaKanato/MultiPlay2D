@@ -6,15 +6,16 @@ using System.Linq;
 /// <summary> 9ボールで、手球がボールに衝突した時の処理を行うクラス </summary>
 public class CollideBalls : MonoBehaviour
 {
-    ///<summary> 存在している的球の番号を格納する配列 </summary>
-    List<int> _existObjectBallNumber = new List<int> { (int)Balls.OneBall, (int)Balls.TwoBall, (int)Balls.ThreeBall, 
-                                                       (int)Balls.FourBall, (int)Balls.FiveBall, (int)Balls.SixBall,
-                                                       (int)Balls.SevenBall, (int)Balls.EightBall, (int)Balls.NineBall};
+    ///<summary> 存在している的球の番号を格納するList </summary>
+    List<Balls> _existObjectBallNumber = new List<Balls> { Balls.OneBall, Balls.TwoBall, Balls.ThreeBall,
+                                                            Balls.FourBall, Balls.FiveBall, Balls.SixBall,
+                                                            Balls.SevenBall, Balls.EightBall, Balls.NineBall};
 
-    Balls[] _Balls = new Balls[0];
+    /// <summary> 落下したボールを記憶(一時保存)しておくList </summary>
+    List<Balls> _pocketBalls = new List<Balls>();
 
     ///<summary> 存在するうちの最小値の的球 </summary>
-    int _minObjectBallNumber = 1;
+    Balls _minObjectBallNumber = Balls.OneBall;
 
     ///<summary> いずれかの的球に衝突したかどうかのフラグ </summary>
     bool _hasCollideAnyObjectBall = false;
@@ -25,12 +26,13 @@ public class CollideBalls : MonoBehaviour
     [SerializeField] FoulProcess _foulProcess = null;
 
     //プロパティ
-    public int MinObjectBallNumber => _minObjectBallNumber;
+    public Balls MinObjectBallNumber => _minObjectBallNumber;
     public bool HasCollideMinObjectBall => _hasCollideMinObjectBall;
+    public List<Balls> PocketBalls => _pocketBalls;
 
     /// <summary> 手球が的球に衝突した時の処理を行うメソッド。最小値の的球に衝突する前に、他の的球に衝突した場合はファール処理を行う。 </summary>
     /// <param name="beBumpedBallNumber"> 衝突した的球の番号 </param>
-    public void CollideCueBall(int beBumpedBallNumber)
+    public void CollideCueBall(Balls beBumpedBallNumber)
     {
         _hasCollideAnyObjectBall = true;
 
@@ -56,10 +58,18 @@ public class CollideBalls : MonoBehaviour
     }
 
     /// <summary> ポケットに落ちた的球の番号を配列から削除するメソッド </summary>
-    /// <param name="pocketedBallNumber"> ポケットに落ちた的球の番号 </param>
-    public void RemoveObjectBallNum(int pocketedBallNumber)
+    public void RemoveObjectBallNum()
     {
-        _existObjectBallNumber.Remove(pocketedBallNumber);
+        foreach (Balls removeBalls in _pocketBalls)
+        {
+            _existObjectBallNumber.Remove(removeBalls);
+        }
+    }
+
+    /// <summary> ポケットに落ちた的球の記憶をリセットする </summary>
+    public void ResetMemoryOfPocketBalls()
+    {
+        _pocketBalls.Clear();
     }
 
     /// <summary> 最小値の的球に衝突したかどうかのフラグをリセットするメソッド </summary>
@@ -69,12 +79,18 @@ public class CollideBalls : MonoBehaviour
         _hasCollideAnyObjectBall = false;
     }
 
+    /// <summary> ポケットに落ちたボールを受け取り、記憶用List(_pocketBalls)に格納するメソッド </summary>
+    public void MemorizePocketedBall(Balls pocketedBall)
+    {
+        _pocketBalls.Add(pocketedBall);
+    }
+
+    /// <summary> どの的球にも衝突しなかったとこと通知するメソッド。いらない可能性あり </summary>
     public void NotifyNoCollide()
     {
         if (!_hasCollideAnyObjectBall)
         {
             _foulProcess.Foul();
         }
-
     }
 }
