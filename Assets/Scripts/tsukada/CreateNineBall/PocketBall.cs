@@ -15,6 +15,8 @@ public class PocketBall : MonoBehaviour
     /// <param name="ballNumber"></param>
     public void PocketObjectBall(Balls PocketBall)
     {
+        _gameStateController.SwitchFlagOfPocketAnyBall();        //何かしらの球が落ちたフラグを切り替える
+
         if (PocketBall == Balls.CueBall)        //手球が落ちたらファール
         {
             GameDebug.Log("手球が落ちました。");
