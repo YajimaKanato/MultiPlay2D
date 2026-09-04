@@ -1,5 +1,7 @@
-using System;
+using Epic.OnlineServices.Auth;
 using FishNet;
+using FishNet.Transporting.FishyEOSPlugin;
+using ParrelSync;
 using PlayEveryWare.EpicOnlineServices;
 using UnityEngine;
 
@@ -20,53 +22,69 @@ public class FishNetRoomManager : MonoBehaviour
         }
     }
 
+    async void Start()
+    {
+        if(ClonesManager.IsClone())
+        {
+            LoginByDeviceID();
+        }
+        else
+        {
+            LoginByEpicAccount();
+        }
+    }
+
+    /// <summary>
+    /// エピックアカウントなしでEOSへのログインを行う
+    /// </summary>
+    private async void LoginByDeviceID()
+    {   
+        EOSManager.Instance.StartConnectLoginWithDeviceToken(
+            "Player2",
+            FishNetCallback.OnConnectLoginComplete
+        );
+    }
+
+    /// <summary>
+    /// エピックアカウントを使用してEOSへのログインを行う
+    /// </summary>
+    private void LoginByEpicAccount()
+    {
+        EOSManager.Instance.StartLoginWithLoginTypeAndToken(
+            LoginCredentialType.AccountPortal,
+            null,
+            "Player1",
+            FishNetCallback.OnAuthLoginComplete
+        );
+    }
+
     /// <summary>
     /// ホストとして部屋を立てる
     /// </summary>
     public void StartRoom()
     {
-        Login(() =>
-        {
-            InstanceFinder.ServerManager.StartConnection();
-            InstanceFinder.ClientManager.StartConnection();
+        InstanceFinder.ServerManager.StartConnection();
+        InstanceFinder.ClientManager.StartConnection();
 
-            var eosManager = EOSManager.Instance;
-            if (eosManager != null)
-            {
-                string puid = eosManager.GetProductUserId().ToString();
-                GameDebug.Log($"PUID: {puid}");
-            }
-        });
+        InstanceFinder.ClientManager.OnClientConnectionState += FishNetCallback.OnChangeClientConnectionState;
     }
 
     /// <summary>
-    /// EOSにログインする
+    /// クライアントとして部屋に合流する
     /// </summary>
-    /// <param name="whenLogined">ログイン成功後の処理</param>
-    private void Login(Action whenLogined)
+    /// <param name="puid">P2P接続先のプレイヤーのPUID</param>
+    public void JoinRoom(string puid)
     {
-        var eosManager = EOSManager.Instance;
-        if(eosManager.GetProductUserId() != null)
+        if (InstanceFinder.NetworkManager.TransportManager.Transport is FishyEOS transport)
         {
-            whenLogined();
+            transport.RemoteProductUserId = puid;
+            InstanceFinder.ClientManager.StartConnection();
+
+            InstanceFinder.ClientManager.OnClientConnectionState += FishNetCallback.OnChangeClientConnectionState;
         }
         else
         {
-            eosManager.StartConnectLoginWithDeviceToken(
-                $"Player_{UnityEngine.Random.Range(1000, 9999)}",
-                loginInfo =>
-                {
-                    if (loginInfo.ResultCode == Epic.OnlineServices.Result.Success)
-                    {
-                        Debug.Log("ログインに成功しました。");
-                        whenLogined();
-                    }
-                    else
-                    {
-                        Debug.LogError($"ログインに失敗しました: {loginInfo.ResultCode}");
-                    }
-                }
-            );
+            GameDebug.LogError("TransportがFishyEOSではありません。");
         }
     }
 }
