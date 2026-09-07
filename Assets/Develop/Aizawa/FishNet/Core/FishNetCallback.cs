@@ -1,5 +1,4 @@
 using Epic.OnlineServices;
-using Epic.OnlineServices.Connect;
 using FishNet;
 using FishNet.Transporting;
 using PlayEveryWare.EpicOnlineServices;
@@ -8,13 +7,13 @@ using PlayEveryWare.EpicOnlineServices;
 /// <para>FishNetにおけるコールバック処理をまとめたクラス</para>
 /// <para>引数にrefを求められる場合がありラムダ式で対応しきれなかったため総じて分割しました</para>
 /// </summary>
-public class FishNetCallback
+public static class FishNetCallback
 {
     /// <summary>
     /// エピックアカウントなしでのログイン処理が終了した際のコールバック
     /// </summary>
     /// <param name="callbackInfo">ログイン処理結果</param>
-    public static void OnConnectLoginComplete(LoginCallbackInfo callbackInfo)
+    public static void OnConnectLoginComplete(Epic.OnlineServices.Connect.LoginCallbackInfo callbackInfo)
     {
         if (callbackInfo.ResultCode == Result.Success)
         {
