@@ -10,19 +10,7 @@ using UnityEngine;
 /// </summary>
 public class FishNetRoomManager : MonoBehaviour
 {
-    void Awake()
-    {
-        if(FindObjectsByType<FishNetRoomManager>(FindObjectsSortMode.None).Length == 1)
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    async void Start()
+    void Start()
     {
         if(ClonesManager.IsClone())
         {
@@ -37,7 +25,7 @@ public class FishNetRoomManager : MonoBehaviour
     /// <summary>
     /// エピックアカウントなしでEOSへのログインを行う
     /// </summary>
-    private async void LoginByDeviceID()
+    private void LoginByDeviceID()
     {   
         EOSManager.Instance.StartConnectLoginWithDeviceToken(
             "Player2",
