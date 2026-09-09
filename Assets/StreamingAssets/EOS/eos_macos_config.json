@@ -12,7 +12,7 @@
   },
   "isServer": false,
   "platformOptionsFlags": "None",
-  "authScopeOptionsFlags": "NoFlags",
+  "authScopeOptionsFlags": "BasicProfile, FriendsList",
   "integratedPlatformManagementFlags": 0,
   "tickBudgetInMilliseconds": 0,
   "taskNetworkTimeoutSeconds": 0.0,
