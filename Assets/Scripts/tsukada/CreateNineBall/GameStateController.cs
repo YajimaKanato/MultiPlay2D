@@ -4,9 +4,10 @@ using UnityEngine;
 /// <summary>  9ボールで、ゲームの進行状態を管理するクラス </summary>
 public class GameStateController : MonoBehaviour
 {
+    #region 諸々の定義
     private GameStateMachine _stateMachine;
 
-    private GameStateController _gameStateController;
+    [SerializeField] private GameStateController _gameStateController;
 
     [SerializeField] private TurnController _turnController;
 
@@ -29,14 +30,17 @@ public class GameStateController : MonoBehaviour
 
     /// <summary> 結果を表示したかのフラグ </summary>
     private bool _isResultDisplayed = false;
-
-    //フラグのプロパティ
+    #endregion
+    
+    #region プロパティ
     public bool IsShotted => _isShotted;
     public bool HadAllBallsStop => _hadAllBallsStop;
     public bool HadPocketAnyBall => _hadPocketAnyBall;
     public bool HadFoul => _hadFoul;
     public bool IsGameClear => _isGameClear;
     public bool IsResultDisplayed => _isResultDisplayed;
+    public GameStateMachine StateMachine => _stateMachine;
+    #endregion
 
     private void Awake()
     {
@@ -45,7 +49,7 @@ public class GameStateController : MonoBehaviour
 
     private void Start()
     {
-        _stateMachine.ChangeState(new ReadyFase(_stateMachine, _gameStateController));
+        _stateMachine.ChangeState(new ReadyPhase(_stateMachine, _gameStateController, _collideBalls, _turnController));
     }
 
     private void Update()
@@ -54,9 +58,7 @@ public class GameStateController : MonoBehaviour
     }
 
 
-    //-----------------------------
-    //↓↓↓フラグ管理系メソッド↓↓↓
-    ///----------------------------
+    #region フラグ管理系メソッド
 
     /// <summary> ゲームクリア条件を満たしたらに呼ばれ、クリアフラグを立てるメソッド </summary>
     public void MeetConditionOfGameClear()
@@ -87,4 +89,5 @@ public class GameStateController : MonoBehaviour
     {
         _hadAllBallsStop = !_hadAllBallsStop;
     }
+    #endregion
 }

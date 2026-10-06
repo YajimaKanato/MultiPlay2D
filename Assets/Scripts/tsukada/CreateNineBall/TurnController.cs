@@ -33,9 +33,9 @@ public class TurnController : MonoBehaviour
 
     ///</summary> 途中退出をしたプレイヤーを参加プレイヤーリストから削除するメソッド <summary>
     /// param name="playerNum"> 途中退出したプレイヤーの番号 </param>
-    public void RemovePlayer(int playerNum)
+    public void RemovePlayer(Turn exitPlayer)
     {
-        players.Remove((Turn)playerNum - 1);
+        players.Remove(exitPlayer);
     }
 
 

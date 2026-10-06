@@ -2,29 +2,31 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary> ドラフトフェーズの処理を行うクラス</summary>
-public class DraftFase : IGameState
+public class DraftPhase : IGameState
 {
     private GameStateMachine _stateMachine;
     private GameStateController _gameStateController;
-    [SerializeField] private CollideBalls _collideBalls = null;
-    [SerializeField] private TurnController _turnController = null;
+    private CollideBalls _collideBalls;
+    private TurnController _turnController;
 
     float _timer = 0f;
 
-    [Tooltip("ドラフトフェーズの制限時間")]
-    [SerializeField] private float _draftFaseTime = 30.0f;
+    private float _draftPhaseTime = 30.0f;
 
-    public GameState StateType => GameState.DraftFase;
+    public GameState StateType => GameState.DraftPhase;
 
-    public DraftFase(GameStateMachine stateMachine, GameStateController gameStateController)
+    public DraftPhase(GameStateMachine stateMachine, GameStateController gameStateController, CollideBalls collideBalls, TurnController turnController)
     {
         _stateMachine = stateMachine;
         _gameStateController = gameStateController;
+        _collideBalls = collideBalls;
+        _turnController = turnController;
     }
 
-    public void Enter()
+    public void Enter(float limitTime)
     {
         _timer = 0f;
+        _draftPhaseTime = limitTime;        //制限時間を設定
         _collideBalls.RemoveObjectBallNum();        //ポケットしたボールを存在管理Listから削除する
         _gameStateController.SwitchFlagOfShotted();    //ショット済みフラグをリセットする
 
@@ -37,7 +39,7 @@ public class DraftFase : IGameState
         //フラグリセット
         if (_gameStateController.HadPocketAnyBall)
         {
-            _gameStateController.SwitchFlagOfPocketAnyBall(); _gameStateController.SwitchFlagOfPocketAnyBall();
+            _gameStateController.SwitchFlagOfPocketAnyBall();
         }
 
         if (_gameStateController.HadFoul)
@@ -52,15 +54,15 @@ public class DraftFase : IGameState
         _timer += Time.deltaTime;
 
         //ドラフトフェーズの制限時間を超えたらショットフェーズに移行する
-        if (_timer >= _draftFaseTime)
+        if (_timer >= _draftPhaseTime)
         {
-            _stateMachine.ChangeState(new ShotFase(_stateMachine, _gameStateController));
+            _stateMachine.ChangeState(new ShotPhase(_stateMachine, _gameStateController, _collideBalls, _turnController));
         }
 
         //if(全員の行動が完了したら)
         if (Input.GetKeyDown(KeyCode.Return))    //仮の条件
         {
-            _stateMachine.ChangeState(new ShotFase(_stateMachine, _gameStateController));
+            _stateMachine.ChangeState(new ShotPhase(_stateMachine, _gameStateController, _collideBalls, _turnController));
         }
     }
 

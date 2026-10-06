@@ -1,20 +1,20 @@
 using UnityEngine;
 
 /// <summary> ゲームの結果を表示するフェーズ </summary>
-public class ResultFase : IGameState
+public class ResultPhase : IGameState
 {
     private GameStateController _gameStateController;
     private TurnController _turnController;
 
-    public GameState StateType => GameState.ResultFase;
+    public GameState StateType => GameState.ResultPhase;
 
-    public ResultFase(GameStateController gameStateController, TurnController turnController)
+    public ResultPhase(GameStateController gameStateController, TurnController turnController)
     {
         _gameStateController = gameStateController;
         _turnController = turnController;
     }
 
-    public void Enter()
+    public void Enter(float limitTime)
     {
         GameDebug.Log($"ゲームが終了しました。 " + $"{_turnController.CurrentTurn} が勝利しました。");
 

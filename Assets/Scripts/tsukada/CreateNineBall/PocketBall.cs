@@ -9,8 +9,6 @@ public class PocketBall : MonoBehaviour
 
     [SerializeField] GameStateController _gameStateController = null;
 
-    ///
-
     /// <summary> ポケットに落ちた球によってファールや勝利条件達成を判定するメソッド </summary>
     /// <param name="ballNumber"></param>
     public void PocketObjectBall(Balls PocketBall)
@@ -24,17 +22,9 @@ public class PocketBall : MonoBehaviour
         }
         else if (PocketBall == Balls.NineBall)        //手球が最小の的球に当たる前に9ボールが落ちたら、9ボールファール
         {
-            if (_collideBalls.HasCollideMinObjectBall)
-            {
-                //9ボールが落ちた場合の処理。勝敗判定を行う。
-                GameDebug.Log("合法的に9ボールが落ちました。");
-                _gameStateController.MeetConditionOfGameClear();
-            }
-            else
-            {
-                GameDebug.Log("不正に9番球が落ちました。");
-                _foulProcess.Foul();
-            }
+            //9ボールが落ちた場合の処理。勝敗判定を行う。
+            GameDebug.Log("合法的に9ボールが落ちました。");
+            _gameStateController.MeetConditionOfGameClear();
         }
         else
         {

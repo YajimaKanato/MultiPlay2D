@@ -8,8 +8,14 @@ public class FoulProcess : MonoBehaviour
     //bool _hasFoul = false;
 
     [SerializeField] TurnController _turnController = null;
-    [SerializeField] GameStateMachine _gameStateMachine = null;
+    private GameStateMachine _gameStateMachine = null;
     [SerializeField] GameStateController _gameStateController = null;
+    [SerializeField] CollideBalls _collideBalls = null;
+
+    void Start()
+    {
+        _gameStateMachine = _gameStateController.StateMachine;
+    }
 
     /// <summary> 一般的なファール </summary>
     public void Foul()
@@ -25,7 +31,7 @@ public class FoulProcess : MonoBehaviour
         {
             GameDebug.Log("好きな場所に手球を配置する");
             //次のプレイヤーが手球を好きな場所に置けるようにする処理、もしくはその通知
-            _gameStateMachine.ChangeState(new FoulFase(_gameStateMachine, _gameStateController));
+            _gameStateMachine.ChangeState(new FoulPhase(_gameStateMachine, _gameStateController, _collideBalls, _turnController));
         }
     }
 }

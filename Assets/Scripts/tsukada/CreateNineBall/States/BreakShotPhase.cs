@@ -1,20 +1,24 @@
 using UnityEngine;
 
 /// <summary> ブレイクショットの処理を行うフェーズ </summary>
-public class BreakShotFase : IGameState
+public class BreakShotPhase : IGameState
 {
     private GameStateMachine _stateMachine;
     private GameStateController _gameStateController;
+    private CollideBalls _collideBalls;
+    private TurnController _turnController;
 
-    public GameState StateType => GameState.BreakeShotFase;
+    public GameState StateType => GameState.BreakShotPhase;
 
-    public BreakShotFase(GameStateMachine stateMachine, GameStateController gameStateController)
+    public BreakShotPhase(GameStateMachine stateMachine, GameStateController gameStateController, CollideBalls collideBalls, TurnController turnController)
     {
         _stateMachine = stateMachine;
         _gameStateController = gameStateController;
+        _collideBalls = collideBalls;
+        _turnController = turnController;
     }
 
-    public void Enter()
+    public void Enter(float limitTime)
     {
 
     }
@@ -24,7 +28,7 @@ public class BreakShotFase : IGameState
         //ショット後、全ての球が止まったらドラフトフェーズに移行する
         if (_gameStateController.IsShotted && _gameStateController.HadAllBallsStop)
         {
-            _stateMachine.ChangeState(new DraftFase(_stateMachine, _gameStateController));
+            _stateMachine.ChangeState(new DraftPhase(_stateMachine, _gameStateController, _collideBalls, _turnController));
         }
     }
 
