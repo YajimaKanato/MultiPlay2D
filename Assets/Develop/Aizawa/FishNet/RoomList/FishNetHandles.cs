@@ -12,7 +12,7 @@ using UnityEngine;
 public static class FishNetHandles
 {
     /// <summary> セッション設定を変更するハンドル </summary>
-    public static HandleHolder<SessionModification, CreateSessionModificationOptions> SessionModificationHandle { get; set; } =
+    public static HandleHolder<SessionModification, CreateSessionModificationOptions> CreateSessionModificationHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
             var result = sessionsInterface.CreateSessionModification(ref options, out var handle);
@@ -24,6 +24,20 @@ public static class FishNetHandles
             MaxPlayers = 4,
             LocalUserId = EOSManager.Instance.GetProductUserId(),
             BucketId = InstanceFinder.NetworkManager.TransportManager.GetTransport<FishyEOS>().SocketName
+        },
+        handle => handle.Release()
+    );
+
+    /// <summary> セッション設定を変更するハンドル </summary>
+    public static HandleHolder<SessionModification, UpdateSessionModificationOptions> UpdateSessionModificationHandle { get; set; } =
+    new((sessionsInterface, options) =>
+        {
+            var result = sessionsInterface.UpdateSessionModification(ref options, out var handle);
+            return (result, handle);
+        },
+        new()
+        {
+            SessionName = "EOSSession"
         },
         handle => handle.Release()
     );

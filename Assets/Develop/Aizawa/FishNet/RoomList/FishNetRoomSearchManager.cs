@@ -24,9 +24,12 @@ public static class FishNetRoomSearchManager
             var resultCountOptions = new SessionSearchGetSearchResultCountOptions();
             var findCount = FishNetHandles.SessionSearchHandle.GetHandle().GetSearchResultCount(ref resultCountOptions);
 
+            _findedSessions.Clear();
+
             if(findCount == 0)
             {
                 Debug.LogError("セッションが見つかりませんでした。");
+                FishNetHandles.SessionSearchHandle.Release();
                 return;
             }
 
@@ -34,8 +37,6 @@ public static class FishNetRoomSearchManager
 
             if(sessionDetails.GetHandle() != null)
             {
-                _findedSessions.Clear();
-
                 for(int i = 0; i < findCount; i++)
                 {
                     sessionDetails.SetOptions(new(){ SessionIndex = (uint)i });
@@ -133,6 +134,12 @@ public static class FishNetRoomSearchManager
     /// <returns>セッション情報</returns>
     public static SessionDetailsInfo? GetSessionInfo()
     {
+        if(EOSManager.Instance.GetProductId() == null)
+        {
+            Debug.LogError("ログインしてください。");
+            return null;
+        }
+
         var sessionHandle = FishNetHandles.ActiveSessionHandle;
 
         if(sessionHandle.GetHandle() != null)

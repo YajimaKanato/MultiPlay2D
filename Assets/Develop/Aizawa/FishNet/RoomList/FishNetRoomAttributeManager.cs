@@ -9,6 +9,8 @@ using UnityEngine;
 /// </summary>
 public static class FishNetRoomAttributeManager
 {
+    private static bool _attributeAdded;
+
     //衝突回避のため、FishNet検証終了後にFishNetCallbackへ移動
     /// <summary>
     /// セッション情報の更新が完了した際のコールバック
@@ -67,6 +69,12 @@ public static class FishNetRoomAttributeManager
     /// <returns>読み取り結果</returns>
     private static AttributeDataValue ReadAttribute(int index, AttributeTypes attribute)
     {
+        if(FishNetRoomSearchManager.FindedSessions.Count <= index)
+        {
+            Debug.LogError($"セッションリストにインデックス{index}番は存在しません。");
+            return new();
+        }
+
         return FishNetRoomSearchManager.FindedSessions[index].attributes[attribute];
     }
 
@@ -83,32 +91,41 @@ public static class FishNetRoomAttributeManager
     /// セッションにデータを埋め込む
     /// </summary>
     /// <param name="attributes">埋め込むデータのリスト</param>
-    public static void AddSessionAttribute(List<AttributeData> attributes)
+    public static void SetSessionAttribute(List<AttributeData> attributes)
     {
-        var sessionsInterface = EOSManager.Instance.GetEOSSessionsInterface();
-        var modificationHandle = FishNetHandles.SessionModificationHandle;
-
-        if (modificationHandle.GetHandle() != null)
+        if(!_attributeAdded)
         {
-            attributes.ForEach(attribute =>
+            _attributeAdded = true;
+
+            var sessionsInterface = EOSManager.Instance.GetEOSSessionsInterface();
+            var modificationHandle = FishNetHandles.CreateSessionModificationHandle;
+
+            if (modificationHandle.GetHandle() != null)
             {
-                var addAttributeOptions = new SessionModificationAddAttributeOptions
+                attributes.ForEach(attribute =>
                 {
-                    SessionAttribute = attribute,
-                    AdvertisementType = SessionAttributeAdvertisementType.Advertise
+                    var addAttributeOptions = new SessionModificationAddAttributeOptions
+                    {
+                        SessionAttribute = attribute,
+                        AdvertisementType = SessionAttributeAdvertisementType.Advertise
+                    };
+
+                    modificationHandle.GetHandle().AddAttribute(ref addAttributeOptions);
+                });
+
+                var updateOptions = new UpdateSessionOptions
+                {
+                    SessionModificationHandle = modificationHandle.GetHandle()
                 };
 
-                modificationHandle.GetHandle().AddAttribute(ref addAttributeOptions);
-            });
+                sessionsInterface.UpdateSession(ref updateOptions, null, OnUpdateSession);
 
-            var updateOptions = new UpdateSessionOptions
-            {
-                SessionModificationHandle = modificationHandle.GetHandle()
-            };
-
-            sessionsInterface.UpdateSession(ref updateOptions, null, OnUpdateSession);
-
-            modificationHandle.Release();
+                modificationHandle.Release();
+            }
+        }
+        else
+        {
+            Debug.LogError("データは初期化済みです。");
         }
     }
 
@@ -196,7 +213,7 @@ public static class FishNetRoomAttributeManager
         /// </summary>
         public void SetAttributes()
         {
-            AddSessionAttribute(stackAttibutes);
+            SetSessionAttribute(stackAttibutes);
         }
     }
 }
