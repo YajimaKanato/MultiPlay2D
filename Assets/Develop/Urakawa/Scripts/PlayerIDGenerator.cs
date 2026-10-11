@@ -1,24 +1,27 @@
 /// <summary>
 /// プレイヤーIDを作成するクラス
-/// 参加するプレイヤーを管理する場所で一度インスタンス化する
 /// </summary>
 public class PlayerIDGenerator
 {
     /// <summary>
-    /// 次に作成するPlayerID
+    /// 次に作成するプレイヤーID
     /// </summary>
-    private uint _nextPlayerID = 1;
+    private uint _nextPlayerId = 1;
 
     /// <summary>
-    /// PlayerIDを1から順番に作成するメソッド
+    /// プレイヤーIDを1から順番に作成するメソッド
     /// </summary>
-    /// <returns>作成したPlayerID</returns>
+    /// <returns>作成したプレイヤーID</returns>
     public PlayerInfo.PlayerID CreatePlayerID()
     {
-        var playerID = new PlayerInfo.PlayerID(_nextPlayerID);
+        var playerId = new PlayerInfo.PlayerID(_nextPlayerId);
 
-        _nextPlayerID++; // 次のPlayerIDを準備する
+        // uintの扱える範囲を超えたときにエラーを出す
+        checked
+        {
+            _nextPlayerId++; // 次のプレイヤーIDを準備する
+        }
 
-        return playerID;
+        return playerId;
     }
 }

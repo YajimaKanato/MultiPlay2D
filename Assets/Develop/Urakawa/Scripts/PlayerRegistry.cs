@@ -1,18 +1,47 @@
 using System.Collections.Generic;
+
+/// <summary>
+/// プレイヤー情報を保持するクラス
+/// プレイヤーIDを指定して操作する
+/// </summary>
 public class PlayerRegistry
 {
     /// <summary>
-    /// PlayerIDからプレイヤーの情報を検索するためのDictionary
+    /// プレイヤーIDからプレイヤー情報を検索するためのDictionary
     /// </summary>
     private readonly Dictionary<PlayerInfo.PlayerID, PlayerInfo> _playerRegistry = new();
 
     /// <summary>
-    /// プレイヤーの情報と登録するメソッド
+    /// プレイヤー情報を登録するメソッド
     /// </summary>
-    /// <param name="playerID">プレイヤーID</param>
-    /// <param name="playerInfo">プレイヤーの情報</param>
-    public void RegisterPlayer(PlayerInfo.PlayerID playerID, PlayerInfo playerInfo)
+    /// <param name="playerInfo">登録するプレイヤー情報</param>
+    public void RegisterPlayerInfo(PlayerInfo playerInfo)
     {
-        _playerRegistry.Add(playerID, playerInfo);
+        _playerRegistry.Add(playerInfo.Player_ID, playerInfo);
+    }
+
+    /// <summary>
+    /// 指定したプレイヤーIDに対応するプレイヤー情報を取得するメソッド
+    /// </summary>
+    /// <param name="playerId">取得対象のプレイヤーID</param>
+    /// <returns>プレイヤーIDに対応したプレイヤー情報</returns>
+    public PlayerInfo TryGetPlayerInfo(PlayerInfo.PlayerID playerId)
+    {
+        if (_playerRegistry.TryGetValue(playerId, out var foundPlayerInfo))
+        {
+            GameDebug.Log("プレイヤー情報の取得成功");
+            return foundPlayerInfo;
+        }
+
+        throw new KeyNotFoundException($"プレイヤー情報が見つかりません。プレイヤーID：{ playerId.ID }");
+    }
+
+    /// <summary>
+    /// プレイヤー情報を削除するメソッド
+    /// </summary>
+    /// <param name="playerId">削除対象のプレイヤーID</param>
+    public void DeletePlayerInfo(PlayerInfo.PlayerID playerId)
+    {
+        _playerRegistry.Remove(playerId);
     }
 }
