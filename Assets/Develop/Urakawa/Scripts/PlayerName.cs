@@ -1,7 +1,7 @@
 /// <summary>
 /// プレイヤー名の定義
 /// </summary>
-public class PlayerName
+public struct PlayerName
 {
     public readonly string Name;
     public PlayerName(string name)

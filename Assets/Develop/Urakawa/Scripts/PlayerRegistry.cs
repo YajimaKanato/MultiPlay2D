@@ -15,25 +15,28 @@ public class PlayerRegistry
     /// プレイヤー情報を登録するメソッド
     /// </summary>
     /// <param name="playerInfo">登録するプレイヤー情報</param>
-    public void RegisterPlayerInfo(PlayerInfo playerInfo)
+    /// <returns>プレイヤー情報の登録に対する成否</returns>
+    public bool TryRegisterPlayerInfo(PlayerInfo playerInfo)
     {
-        _playerRegistry.Add(playerInfo.Player_ID, playerInfo);
+        return _playerRegistry.TryAdd(playerInfo.Player_ID, playerInfo);
     }
 
     /// <summary>
     /// 指定したプレイヤーIDに対応するプレイヤー情報を取得するメソッド
     /// </summary>
     /// <param name="playerId">取得対象のプレイヤーID</param>
-    /// <returns>プレイヤーIDに対応したプレイヤー情報</returns>
-    public PlayerInfo TryGetPlayerInfo(PlayerID playerId)
+    /// <returns>プレイヤーIDに対応したプレイヤー情報の取得に対する成否</returns>
+    public bool TryGetPlayerInfo(PlayerID playerId, out PlayerInfo foundPlayerInfo)
     {
-        if (_playerRegistry.TryGetValue(playerId, out var foundPlayerInfo))
+        if (_playerRegistry.TryGetValue(playerId, out foundPlayerInfo))
         {
             GameDebug.Log("プレイヤー情報の取得成功");
-            return foundPlayerInfo;
+            return true;
         }
 
-        throw new KeyNotFoundException($"プレイヤー情報が見つかりません。プレイヤーID：{ playerId.ID }");
+        GameDebug.LogWarning($"プレイヤー情報が見つかりませんでした。対象のプレイヤーID：{playerId}");
+        return false;
+
     }
 
     /// <summary>
