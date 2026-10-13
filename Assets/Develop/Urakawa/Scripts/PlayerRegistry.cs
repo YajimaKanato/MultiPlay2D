@@ -9,7 +9,7 @@ public class PlayerRegistry
     /// <summary>
     /// プレイヤーIDからプレイヤー情報を検索するためのDictionary
     /// </summary>
-    private readonly Dictionary<PlayerInfo.PlayerID, PlayerInfo> _playerRegistry = new();
+    private readonly Dictionary<PlayerID, PlayerInfo> _playerRegistry = new();
 
     /// <summary>
     /// プレイヤー情報を登録するメソッド
@@ -25,7 +25,7 @@ public class PlayerRegistry
     /// </summary>
     /// <param name="playerId">取得対象のプレイヤーID</param>
     /// <returns>プレイヤーIDに対応したプレイヤー情報</returns>
-    public PlayerInfo TryGetPlayerInfo(PlayerInfo.PlayerID playerId)
+    public PlayerInfo TryGetPlayerInfo(PlayerID playerId)
     {
         if (_playerRegistry.TryGetValue(playerId, out var foundPlayerInfo))
         {
@@ -40,7 +40,7 @@ public class PlayerRegistry
     /// プレイヤー情報を削除するメソッド
     /// </summary>
     /// <param name="playerId">削除対象のプレイヤーID</param>
-    public void DeletePlayerInfo(PlayerInfo.PlayerID playerId)
+    public void DeletePlayerInfo(PlayerID playerId)
     {
         _playerRegistry.Remove(playerId);
     }

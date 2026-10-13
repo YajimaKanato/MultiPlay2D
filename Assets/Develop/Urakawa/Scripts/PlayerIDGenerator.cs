@@ -12,9 +12,9 @@ public class PlayerIDGenerator
     /// プレイヤーIDを1から順番に作成するメソッド
     /// </summary>
     /// <returns>作成したプレイヤーID</returns>
-    public PlayerInfo.PlayerID CreatePlayerID()
+    public PlayerID CreatePlayerID()
     {
-        var playerId = new PlayerInfo.PlayerID(_nextPlayerId);
+        var playerId = new PlayerID(_nextPlayerId);
 
         // uintの扱える範囲を超えたときにエラーを出す
         checked

@@ -6,17 +6,17 @@ public readonly struct PlayerInfo
     /// <summary>
     /// プレイヤーIDを外部から取得するためのプロパティ
     /// </summary>
-    public PlayerID Player_ID { get; }
+    public readonly PlayerID Player_ID;
 
     /// <summary>
     /// プレイヤー名を外部から取得するためのプロパティ
     /// </summary>
-    public PlayerName Player_Name { get; }
+    public readonly PlayerName Player_Name;
 
     /// <summary>
     /// プレイヤーが何Pかを外部から取得するためのプロパティ
     /// </summary>
-    public PlayerSlot Player_Slot { get; }
+    public readonly PlayerSlot Player_Slot;
 
     /// <summary>
     /// プレイヤー情報のコンストラクタ
@@ -29,30 +29,6 @@ public readonly struct PlayerInfo
         Player_ID = playerId;
         Player_Name = playerName;
         Player_Slot = playerSlot;
-    }
-
-    /// <summary>
-    /// プレイヤーIDの定義
-    /// </summary>
-    public readonly struct PlayerID
-    {
-        public uint ID { get; }
-        public PlayerID(uint id)
-        {
-            ID = id;
-        }
-    }
-
-    /// <summary>
-    /// プレイヤー名の定義
-    /// </summary>
-    public readonly struct PlayerName
-    {
-        public string Name { get; }
-        public PlayerName(string name)
-        {
-            Name = name;
-        }
     }
 
     /// <summary>
