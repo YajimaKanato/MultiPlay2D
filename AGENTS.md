@@ -42,3 +42,4 @@ The Japanese Conversation comment must contain all of the following:
 
 Keep diagrams readable. If one diagram becomes crowded, split it by responsibility or scenario. Prefer precise, code-grounded content over exhaustive inclusion of unrelated repository classes.
 
+
