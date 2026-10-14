@@ -21,14 +21,16 @@ public static class FishNetRoomSearchManager
         {
             Debug.Log("セッション検索に成功しました。");
 
+            //検索結果の数を取得
             var resultCountOptions = new SessionSearchGetSearchResultCountOptions();
             var findCount = FishNetHandles.SessionSearchHandle.GetHandle().GetSearchResultCount(ref resultCountOptions);
 
             _findedSessions.Clear();
 
+            //結果が0ならSessionDetailsHandleを取得できないためメソッドを抜ける
             if(findCount == 0)
             {
-                Debug.LogError("セッションが見つかりませんでした。");
+                Debug.Log("セッションが見つかりませんでした。");
                 FishNetHandles.SessionSearchHandle.Release();
                 return;
             }
@@ -37,6 +39,7 @@ public static class FishNetRoomSearchManager
 
             if(sessionDetails.GetHandle() != null)
             {
+                //SessionDetailsからデータ内容を抜き出し、専用の構造体に変換してリストに保管
                 for(int i = 0; i < findCount; i++)
                 {
                     sessionDetails.SetOptions(new(){ SessionIndex = (uint)i });
@@ -63,10 +66,13 @@ public static class FishNetRoomSearchManager
     /// </summary>
     public static void SearchSession()
     {
+        //検索用のハンドルを取得
+        //コールバックを受け取れなくなるため、コールバック内で解放を行う
         var sessionSearchHandle = FishNetHandles.SessionSearchHandle;
 
         if(sessionSearchHandle.GetHandle() != null)
         {
+            //検索条件の設定
             AddSearchParameter(sessionSearchHandle.GetHandle(), new(){ Key = AttributeTypes.RoomName.ToString(), Value = "NewRoom" });
 
             var findOptions = new SessionSearchFindOptions
@@ -74,6 +80,7 @@ public static class FishNetRoomSearchManager
                 LocalUserId = EOSManager.Instance.GetProductUserId()
             };
 
+            //セッション検索を行い、コールバックの受け取り先を指定
             sessionSearchHandle.GetHandle().Find(ref findOptions, null, OnSessionFind);
         }
     }
@@ -85,83 +92,24 @@ public static class FishNetRoomSearchManager
     /// <param name="attribute">照合するデータ</param>
     private static void AddSearchParameter(SessionSearch sessionSearchHandle, AttributeData attribute)
     {
+        //条件として指定するデータを設定に変換
         var setSessionParameterOptions = new SessionSearchSetParameterOptions
         {
             Parameter = attribute,
             ComparisonOp = ComparisonOp.Equal
         };
 
+        //ハンドルに検索条件を入力
         Result result = sessionSearchHandle.SetParameter(ref setSessionParameterOptions);
 
         if (result == Result.Success)
         {
-
             Debug.Log("検索条件の設定に成功");
         }
         else
         {
             Debug.LogError($"検索条件の設定に失敗: {result}");
         }
-    }
-
-    /// <summary>
-    /// 検索対象のセッションIDを指定する。
-    /// </summary>
-    /// <param name="sessionSearchHandle">検索用ハンドル</param>
-    private static void SetSearchId(SessionSearch sessionSearchHandle)
-    {
-        var setSessionIdOptions = new SessionSearchSetSessionIdOptions
-        {
-            SessionId = GetSessionInfo()?.SessionId
-        };
-
-        Result result = sessionSearchHandle.SetSessionId(ref setSessionIdOptions);
-
-        if (result == Result.Success)
-        {
-
-            Debug.Log("SessionIDの設定に成功");
-        }
-        else
-        {
-            Debug.LogError($"SessionIDの設定に失敗: {result}");
-        }
-    }
-
-    /// <summary>
-    /// 現在いるセッションの情報を取得する
-    /// </summary>
-    /// <returns>セッション情報</returns>
-    public static SessionDetailsInfo? GetSessionInfo()
-    {
-        if(EOSManager.Instance.GetProductId() == null)
-        {
-            Debug.LogError("ログインしてください。");
-            return null;
-        }
-
-        var sessionHandle = FishNetHandles.ActiveSessionHandle;
-
-        if(sessionHandle.GetHandle() != null)
-        {
-            var copySessionDetailsOptions = new ActiveSessionCopyInfoOptions();
-            Result detailsResult = sessionHandle.GetHandle().CopyInfo(ref copySessionDetailsOptions, out ActiveSessionInfo? sessionDetails);
-
-            if (detailsResult == Result.Success && sessionDetails != null)
-            {
-                Debug.Log("アクティブセッションの取得に成功しました。");
-
-                return sessionDetails.Value.SessionDetails.Value;
-            }
-            else
-            {
-                Debug.LogError("SessionDetailsInfoの取得に失敗しました。");
-            }
-
-            sessionHandle.Release();
-        }
-
-        return null;
     }
 
     /// <summary>
@@ -175,17 +123,21 @@ public static class FishNetRoomSearchManager
         {
             attributes = new();
 
+            //各データを取り出してディクショナリに保管
             foreach(AttributeTypes type in Enum.GetValues(typeof(AttributeTypes)))
             {
+                //enumをキーに変換
                 var copySessionAttributeByKeyOptions = new SessionDetailsCopySessionAttributeByKeyOptions
                 {
                     AttrKey = type.ToString()
                 };
                 
+                //セッション情報から特定のキーのデータを読み取る
                 Result result = sessionDetails.CopySessionAttributeByKey(ref copySessionAttributeByKeyOptions, out SessionDetailsAttribute? attribute);
 
                 if(result == Result.Success && attribute != null)
                 {
+                    //実際に扱う値のみ読み取ってディクショナリに追加
                     attributes.Add(type, attribute.Value.Data.Value.Value);
                 }
                 else

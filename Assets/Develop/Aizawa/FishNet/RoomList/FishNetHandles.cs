@@ -7,11 +7,14 @@ using PlayEveryWare.EpicOnlineServices;
 using UnityEngine;
 
 /// <summary>
-/// FishNetで要求されるハンドルを管理する静的クラス
+/// <para>FishNetで要求されるハンドルを管理する静的クラス</para>
+/// <para>EOSのSDK側へ各種処理を行わせる</para>
+/// <para>SDKのメモリ内に実体が作られ、そのポインターを受け取る</para>
+/// <para>Unityのガベージコレクションの対象外となるため、ReleaseしてSDK側で解放させないとリークする</para>
 /// </summary>
 public static class FishNetHandles
 {
-    /// <summary> セッション設定を変更するハンドル </summary>
+    /// <summary> セッション設定を初期化するハンドル </summary>
     public static HandleHolder<SessionModification, CreateSessionModificationOptions> CreateSessionModificationHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
@@ -93,8 +96,11 @@ public static class FishNetHandles
     public class HandleHolder<THandle, TOptions> where THandle : Handle where TOptions : struct
     {
         THandle holdHandle;
+        /// <summary> 各ハンドルに対応した設定内容 </summary>
         TOptions holdOptions;
+        /// <summary> 設定を与えてハンドルを生成するデリゲート </summary>
         Func<SessionsInterface, TOptions, (Result result, THandle handle)> createHandle;
+        /// <summary> ハンドルを解放し破棄するデリゲート </summary>
         Action<THandle> releaseHandle;
 
         /// <summary>

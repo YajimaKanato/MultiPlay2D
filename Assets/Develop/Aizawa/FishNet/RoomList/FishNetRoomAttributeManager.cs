@@ -20,6 +20,7 @@ public static class FishNetRoomAttributeManager
     {
         if(info.ResultCode == Result.Success)
         {
+            _attributeAdded = true;
             Debug.Log($"セッションを更新しました。");
         }
         else
@@ -81,7 +82,6 @@ public static class FishNetRoomAttributeManager
     /// <summary>
     /// データ埋め込み用の構造体の取得
     /// </summary>
-    /// <returns></returns>
     public static AttributeStack GetAttributeStack()
     {
         return new();
@@ -93,20 +93,25 @@ public static class FishNetRoomAttributeManager
     /// <param name="attributes">埋め込むデータのリスト</param>
     public static void SetSessionAttribute(List<AttributeData> attributes)
     {
+        //UpdateSession後はCreateSessionModificationHandleを取得しようとするとエラーになる
+        //よって、部屋立て前に1度だけ初期化として実行する
         if(!_attributeAdded)
         {
-            _attributeAdded = true;
-
+            //セッション操作用のインターフェースを取得する
             var sessionsInterface = EOSManager.Instance.GetEOSSessionsInterface();
+
+            //セッション初期化用のハンドルを取得する
             var modificationHandle = FishNetHandles.CreateSessionModificationHandle;
 
             if (modificationHandle.GetHandle() != null)
             {
+                //全データを埋め込む
                 attributes.ForEach(attribute =>
                 {
                     var addAttributeOptions = new SessionModificationAddAttributeOptions
                     {
                         SessionAttribute = attribute,
+                        //Advertiseにしないと外部から参照できなくなる
                         AdvertisementType = SessionAttributeAdvertisementType.Advertise
                     };
 
@@ -118,6 +123,7 @@ public static class FishNetRoomAttributeManager
                     SessionModificationHandle = modificationHandle.GetHandle()
                 };
 
+                //変更に基づいてセッション情報を更新する
                 sessionsInterface.UpdateSession(ref updateOptions, null, OnUpdateSession);
 
                 modificationHandle.Release();
