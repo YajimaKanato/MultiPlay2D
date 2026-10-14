@@ -15,6 +15,9 @@ public class GameStateMachine
     public float DraftPhaseTime { set => _draftPhaseTime = value; }
     public float ShotPhaseTime { set => _shotPhaseTime = value; }
 
+
+    
+
     /// <summary> フェーズを切り替えるメソッド </summary>
     /// <param name="newState"> 切り替わり先フェーズ </param>
     public void ChangeState(IGameState newState)

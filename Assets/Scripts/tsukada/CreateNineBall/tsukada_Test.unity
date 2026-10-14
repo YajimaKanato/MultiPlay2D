@@ -560,6 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72261326a27fa244a9be7fc3e7aefc85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollideBalls
+  _existObjectBallNumber: 010000000200000003000000040000000500000006000000070000000800000009000000
   _foulProcess: {fileID: 754722805}
 --- !u!4 &754722802
 Transform:
@@ -601,9 +602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f941e8bf973c64418531b3978d385e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateController
-  _currentGameState: 0
-  _draftFaseTime: 3
-  _shotFaseTime: 3
+  _gameStateController: {fileID: 754722804}
   _turnController: {fileID: 754722803}
   _collideBalls: {fileID: 754722801}
 --- !u!114 &754722805
@@ -620,6 +619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoulProcess
   _turnController: {fileID: 754722803}
   _gameStateController: {fileID: 754722804}
+  _collideBalls: {fileID: 754722801}
 --- !u!114 &754722806
 MonoBehaviour:
   m_ObjectHideFlags: 0
