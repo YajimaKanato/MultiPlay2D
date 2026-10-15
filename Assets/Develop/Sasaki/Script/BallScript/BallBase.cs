@@ -6,11 +6,19 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class BallBase : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
-
+    
+    [Header("球の設定")]
+    [Tooltip("球の半径")]
     [SerializeField] private float _ballRadius;
-    [Tooltip("転がる時の球の摩擦力")]
+    [Tooltip("球の摩擦力")]
     [SerializeField] private float _friction = 0.99f;
+    [Tooltip("球が停止したとみなす閾値")] 
+    [SerializeField] private float _stopThresholdSpeed = 0.05f;
+
+    [SerializeField] private Rigidbody _rb;
+    [Tooltip("球が停止中か判定")]
+    [SerializeField] private bool _isStopped;
+
 
     protected virtual void Awake()
     {
@@ -38,16 +46,30 @@ public abstract class BallBase : MonoBehaviour
     /// </summary>
     protected virtual void BaseFixedUpdate()
     {
-        _rb.linearVelocity *= _friction;
+        if (_rb.linearVelocity == Vector3.zero) return;
+
+        //球がストップしたか判定 (閾値以下のときは0を代入)
+        if (_rb.linearVelocity.magnitude < _stopThresholdSpeed)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            _isStopped = true;
+            GameDebug.Log($"{gameObject.name}球が止まりました");
+        }
+        else
+        {
+            //摩擦処理
+            _rb.linearVelocity *= _friction;
+            _isStopped = false;
+        }
     }
 
     /// <summary>
-    /// 速度ベクトルを更新する処理 (ショットで使用　＋　加速装置で使用)   
+    ///  速度の倍率更新処理
     /// </summary>
-    /// <param name="velocity">速度ベクトル</param>
-    public void UpdateMoveVelocity(Vector3 velocity)
+    /// <param name="velocity">速度の倍率</param>
+    public void ApplySpeedMultiplier(float speedMultiplier)
     {
-        _rb.linearVelocity = velocity;
+        _rb.linearVelocity *= speedMultiplier;
     }
 
     /// <summary>

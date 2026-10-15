@@ -1,7 +1,19 @@
 ﻿<Solution>
+  <Project Path="FishNet.Runtime.csproj" />
+  <Project Path="GameKit.Dependencies.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="FishNet.Codegen.Cecil.csproj" />
+  <Project Path="Unity.FishNet.Codegen.csproj" />
+  <Project Path="com.playeveryware.eos.samples.csproj" />
   <Project Path="Fusion.Unity.csproj" />
+  <Project Path="SynapseSocket.csproj" />
   <Project Path="Photon.Realtime.csproj" />
+  <Project Path="ParrelSync.csproj" />
+  <Project Path="FishNet.Demos.csproj" />
   <Project Path="Fusion.Unity.Editor.csproj" />
+  <Project Path="com.playeveryware.eos.samples.appleauth.editor.csproj" />
   <Project Path="Unity.Fusion.CodeGen.csproj" />
+  <Project Path="com.playeveryware.eos.samples.oculus.csproj" />
+  <Project Path="com.playeveryware.eos.samples.steam.csproj" />
+  <Project Path="com.playeveryware.eos.samples.appleauth.csproj" />
 </Solution>

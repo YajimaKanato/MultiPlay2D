@@ -1,3 +1,6 @@
 [submodule "Assets/SubModule"]
 	path = Assets/SubModule
 	url = https://github.com/YajimaKanato/MultiPlay2DSub.git
+[submodule "Assets/FBX"]
+	path = Assets/FBX
+	url = https://github.com/YajimaKanato/MultiPlay2DSubFBX.git
