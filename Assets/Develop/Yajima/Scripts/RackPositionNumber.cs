@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Yajima
@@ -7,7 +8,7 @@ namespace Yajima
     /// <para>格段左から数える</para>
     /// <para>0オリジンとしてインデックス指定に使えるようにする</para>
     /// </summary>
-    public enum RackPositionNumber
+    public enum RackPositionNumber : Byte
     {
         /// <summary>ラックの位置番号1</summary>
         [InspectorName("三角形のトップ")] Position1 = 0,
