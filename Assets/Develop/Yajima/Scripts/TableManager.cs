@@ -67,13 +67,14 @@ namespace Yajima
                     continue;
                 }
 
-                var transform = _balls[(int)rackBall.RackPositionNumber].Transform;
-                if (transform == null)
+                var rackBallPosition = _balls
+                        .FirstOrDefault(rackNum => rackNum.RackPositionNumber == rackBall.RackPositionNumber)?.Transform;
+                if (rackBallPosition == null)
                 {
                     GameDebug.LogError($"ラックの位置 {rackBall.RackPositionNumber} に配置する球のTransformが設定されていません");
                     continue;
                 }
-                Instantiate(ballPrefab, transform.position, Quaternion.identity);
+                Instantiate(ballPrefab, rackBallPosition.position, Quaternion.identity);
             }
         }
 
