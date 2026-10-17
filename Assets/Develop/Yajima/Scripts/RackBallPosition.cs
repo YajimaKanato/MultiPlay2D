@@ -10,6 +10,6 @@ namespace Yajima
         [SerializeField, Tooltip("ラックの位置に配置する球のプレハブ")] Transform _transform;
         
         public RackPositionNumber RackPositionNumber => _rackPositionNumber;
-        public Transform BallPrefab => _transform;
+        public Transform Transform => _transform;
     }
 }
