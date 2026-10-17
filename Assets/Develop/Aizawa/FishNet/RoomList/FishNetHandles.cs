@@ -18,6 +18,7 @@ public static class FishNetHandles
     public static HandleHolder<SessionModification, CreateSessionModificationOptions> CreateSessionModificationHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
+            //新規セッション用の変更ハンドル取得
             var result = sessionsInterface.CreateSessionModification(ref options, out var handle);
             return (result, handle);
         },
@@ -35,11 +36,13 @@ public static class FishNetHandles
     public static HandleHolder<SessionModification, UpdateSessionModificationOptions> UpdateSessionModificationHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
+            //既存セッション用の変更ハンドル取得
             var result = sessionsInterface.UpdateSessionModification(ref options, out var handle);
             return (result, handle);
         },
         new()
         {
+            //変更するセッションの内部名称
             SessionName = "EOSSession"
         },
         handle => handle.Release()
@@ -49,11 +52,13 @@ public static class FishNetHandles
     public static HandleHolder<SessionSearch, CreateSessionSearchOptions> SessionSearchHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
+            //セッション検索用ハンドル取得
             var result = sessionsInterface.CreateSessionSearch(ref options, out var handle);
             return (result, handle);
         },
         new()
         {
+            //最大何件のセッションまで受け取るか
             MaxSearchResults = 50
         },
         handle => handle.Release()
@@ -63,11 +68,15 @@ public static class FishNetHandles
     public static HandleHolder<SessionDetails, SessionSearchCopySearchResultByIndexOptions> SessionDetailsHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
+            //検索結果の詳細読み取りハンドル取得
+            //検索結果リストのインデックスを指定して読み取る
             var result = SessionSearchHandle.GetHandle().CopySearchResultByIndex(ref options, out var handle);
             return (result, handle);
         },
         new()
         {
+            //読み取るセッションのリスト内でのインデックス
+            //SetOptionsで変更する必要がある
             SessionIndex = 0
         },
         handle => handle.Release()
@@ -77,11 +86,13 @@ public static class FishNetHandles
     public static HandleHolder<ActiveSession, CopyActiveSessionHandleOptions> ActiveSessionHandle { get; set; } =
     new((sessionsInterface, options) =>
         {
+            //現在いるセッションへのアクセスハンドル取得
             var result = sessionsInterface.CopyActiveSessionHandle(ref options, out var handle);
             return (result, handle);
         },
         new()
         {
+            //現在いるセッションの内部名称
             SessionName = "EOSSession"
         },
         handle => handle.Release()
@@ -123,9 +134,7 @@ public static class FishNetHandles
         /// <returns>保持ハンドル</returns>
         public THandle GetHandle()
         {
-            holdHandle ??= SetHandle();
-
-            return holdHandle;
+            return holdHandle ??= SetHandle();
         }
 
         /// <summary>
@@ -133,6 +142,7 @@ public static class FishNetHandles
         /// </summary>
         public void Release()
         {
+            //ハンドルを解放し、変数も初期化
             releaseHandle(holdHandle);
             holdHandle = null;
         }
@@ -143,8 +153,10 @@ public static class FishNetHandles
         /// <returns>生成したハンドル</returns>
         private THandle SetHandle()
         {
+            //セッションへのアクセスを取得
             var sessionsInterface = EOSManager.Instance.GetEOSSessionsInterface();
 
+            //保持している設定内容をもとにハンドルを生成、生成結果も受け取る
             var (result, handle) = createHandle(sessionsInterface, holdOptions);
 
             if (result == Result.Success)
