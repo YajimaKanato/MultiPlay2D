@@ -13,6 +13,7 @@ namespace Yajima
         [SerializeField, Tooltip("ラックの組み方")] RackBallPosition[] _balls;
         RackPositionPair[] _rackBalls;
         RuleBlackBoard _ruleBlackBoard;
+        bool _isRegisterdAction = false;
 
         public void Init(RackAsset rackAsset, RuleBlackBoard ruleBlackBoard)
         {
@@ -38,12 +39,12 @@ namespace Yajima
 
         void RegisterAction()
         {
-
+            if (_isRegisterdAction) return;
         }
         
         void UnregisterAction()
         {
-            
+            if (!_isRegisterdAction) return;
         }
 
         /// <summary>
@@ -90,6 +91,19 @@ namespace Yajima
                 _ruleBlackBoard.IsTouchAnyBall = true;
                 _ruleBlackBoard.TouchFirstTargetBall = collideBall == _ruleBlackBoard.FirstTouchBall;
             }
+        }
+
+        /// <summary>
+        /// 球がポケットインした時に呼ばれるメソッド
+        /// </summary>
+        /// <param name="pocketInBall">ポケットインした球</param>
+        void PocketInBall(Balls pocketInBall)
+        {
+            if (!_ruleBlackBoard.IsShot) return;
+
+            // 手球が入った
+            if (pocketInBall == Balls.CueBall)
+                _ruleBlackBoard.IsPocketInCueBall = true;
         }
     }
 }
