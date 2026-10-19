@@ -112,8 +112,6 @@ public static class FishNetRoomAttributeManager
         //よって、部屋立て前に1度だけ初期化として実行する
         if(_attributeInitializeState == AttributeInitializeState.NotDone)
         {
-            _attributeInitializeState = AttributeInitializeState.Progress;
-
             //セッション操作用のインターフェースを取得する
             var sessionsInterface = EOSManager.Instance.GetEOSSessionsInterface();
 
@@ -122,6 +120,8 @@ public static class FishNetRoomAttributeManager
 
             if (modificationHandle.GetHandle() != null)
             {
+                _attributeInitializeState = AttributeInitializeState.Progress;
+                
                 //全データを埋め込む
                 attributes.ForEach(attribute =>
                 {
